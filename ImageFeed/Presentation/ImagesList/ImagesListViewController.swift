@@ -7,24 +7,29 @@
 
 import UIKit
 
-class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController {
 
     @IBOutlet private var tableView: UITableView!
+    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
 }
 
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return photosName.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
         
         guard let imagesListCell = cell as? ImagesListCell else {
@@ -32,7 +37,7 @@ extension ImagesListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        configCell(for: imagesListCell)
+        configCell(for: imagesListCell, with: indexPath)
         return imagesListCell
     }
     
@@ -40,11 +45,59 @@ extension ImagesListViewController: UITableViewDataSource {
 }
 
 extension ImagesListViewController {
-    func configCell(for cell: ImagesListCell) {
+    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+        let imageName = "\(photosName[indexPath.row]).jpg"
         
+        guard let image = UIImage(named: imageName) else {
+            print("⚠️ Картинка с именем \(imageName) не найдена.")
+            return
+        }
+        // Установка изображения
+        cell.cellImageView.image = image
+        
+        // Установка даты
+        let dateString = dateFormatter.string(from: Date())
+        cell.dateLabelView.text = dateString
+        
+        // Установка лайка
+        let likeImageName = indexPath.row.isEven ? "Active" : "No Active"
+        cell.likeButtonView.imageView?.image = UIImage(named: likeImageName)
+
     }
 }
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let imageName = "\(photosName[indexPath.row]).jpg"
+        
+        // Получаем изображение по имени
+        guard let image = UIImage(named: imageName) else {
+            return 200
+        }
+        
+        // Размеры изображения
+        let imageSize = image.size
+        
+        // Ширина экрана (или ячейки)
+        let screenWidth = tableView.bounds.width
+        
+        // Высота с сохранением пропорций
+        let imageViewHeight = imageSize.height * (screenWidth / imageSize.width)
+        
+        // Добавим отступы (cверху 4 и снизу 4)
+        let verticalPadding: CGFloat = 8
+        
+        return imageViewHeight + verticalPadding
+    }
+}
+
+extension Int {
+        var isEven: Bool {
+            return self % 2 == 0
+        }
+        var isOdd: Bool {
+            return !isEven
+        }
 }

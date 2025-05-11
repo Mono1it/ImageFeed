@@ -88,7 +88,10 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="YP Black"/>
                                         <connections>
+                                            <outlet property="cellImageView" destination="fZN-VM-geK" id="F1Y-en-6V4"/>
+                                            <outlet property="dateLabelView" destination="beI-b5-xxu" id="udp-f9-dt6"/>
                                             <outlet property="gradientView" destination="L9n-pd-x5r" id="AB4-dx-SEC"/>
+                                            <outlet property="likeButtonView" destination="ffa-3d-0Nh" id="HbP-TH-Ybx"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
