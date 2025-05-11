@@ -8,8 +8,10 @@
 import UIKit
 
 final class ImagesListViewController: UIViewController {
-
+    // MARK: - IB Outlets
     @IBOutlet private var tableView: UITableView!
+    
+    // MARK: - Private Properties
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -18,33 +20,13 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
     
+    // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
-}
 
-extension ImagesListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
-        
-        guard let imagesListCell = cell as? ImagesListCell else {
-            print("Не удалось привести ячейку к нужному типу.")
-            return UITableViewCell()
-        }
-        
-        configCell(for: imagesListCell, with: indexPath)
-        return imagesListCell
-    }
-    
-    
-}
-
-extension ImagesListViewController {
+    // MARK: - Public Methods
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let imageName = "\(photosName[indexPath.row]).jpg"
         
@@ -62,10 +44,30 @@ extension ImagesListViewController {
         // Установка лайка
         let likeImageName = indexPath.row.isEven ? "Active" : "No Active"
         cell.likeButtonView.imageView?.image = UIImage(named: likeImageName)
-
+        
+    }
+}
+// MARK: - TableView Data Source extension
+extension ImagesListViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return photosName.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
+        
+        guard let imagesListCell = cell as? ImagesListCell else {
+            print("Не удалось привести ячейку к нужному типу.")
+            return UITableViewCell()
+        }
+        
+        configCell(for: imagesListCell, with: indexPath)
+        return imagesListCell
     }
 }
 
+
+// MARK: - TableView Delegate extension
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
     
@@ -93,11 +95,12 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - Integer odd and even extention
 extension Int {
-        var isEven: Bool {
-            return self % 2 == 0
-        }
-        var isOdd: Bool {
-            return !isEven
-        }
+    var isEven: Bool {
+        return self % 2 == 0
+    }
+    var isOdd: Bool {
+        return !isEven
+    }
 }
