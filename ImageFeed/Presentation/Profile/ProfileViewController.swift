@@ -1,51 +1,39 @@
-//
-//  ProfileViewController.swift
-//  ImageFeed
-//
-//  Created by Ilya Shcherbakov on 12.05.2025.
-//
-
 import UIKit
 
 final class ProfileViewController: UIViewController {
-
+    
     // MARK: - UI Elements
-
-    private let nameLabel: UILabel = {
+    private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Екатерина Новикова"
+        label.text = ProfileConstants.userName
         label.textColor = UIColor(named: "YP White")
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
-    private let nickNameLabel: UILabel = {
+    
+    private lazy var nickNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "@ekaterina_nov"
+        label.text = ProfileConstants.userLogin
         label.textColor = UIColor(named: "YP Gray")
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
-    private let descriptionLabel: UILabel = {
+    
+    private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Hello, world!"
+        label.text = ProfileConstants.userDiscription
         label.textColor = UIColor(named: "YP White")
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
-    private let profileImageView: UIImageView = {
+    
+    private lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "Photo")
         imageView.tintColor = .gray
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-
+    
     private lazy var exitButton: UIButton = {
         let button = UIButton.systemButton(
             with: UIImage(named: "Exit") ?? UIImage(),
@@ -53,27 +41,32 @@ final class ProfileViewController: UIViewController {
             action: #selector(didTapExitButton)
         )
         button.tintColor = UIColor(named: "YP Red")
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
+    
+    private enum ProfileConstants {
+        static let userName = "Екатерина Новикова"
+        static let userLogin = "@ekaterina_nov"
+        static let userDiscription = "Hello, world!"
+    }
     // MARK: - Lifecycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        setupUI()
         setupProfileImageView()
         setupNameLabel()
         setupNicknameLabel()
         setupDescriptionLabel()
         setupExitButton()
     }
-
+    
     // MARK: - Setup Functions
-
+    private func setupUI() {
+        view.addSubviews(profileImageView, nameLabel, nickNameLabel, descriptionLabel, exitButton)
+    }
+    
     private func setupProfileImageView() {
-        view.addSubview(profileImageView)
-
         NSLayoutConstraint.activate([
             profileImageView.widthAnchor.constraint(equalToConstant: 70),
             profileImageView.heightAnchor.constraint(equalToConstant: 70),
@@ -81,37 +74,29 @@ final class ProfileViewController: UIViewController {
             profileImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ])
     }
-
+    
     private func setupNameLabel() {
-        view.addSubview(nameLabel)
-
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 8),
             nameLabel.leadingAnchor.constraint(equalTo: profileImageView.leadingAnchor)
         ])
     }
-
+    
     private func setupNicknameLabel() {
-        view.addSubview(nickNameLabel)
-
         NSLayoutConstraint.activate([
             nickNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
             nickNameLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor)
         ])
     }
-
+    
     private func setupDescriptionLabel() {
-        view.addSubview(descriptionLabel)
-
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: nickNameLabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: nickNameLabel.leadingAnchor)
         ])
     }
-
+    
     private func setupExitButton() {
-        view.addSubview(exitButton)
-
         NSLayoutConstraint.activate([
             exitButton.widthAnchor.constraint(equalToConstant: 44),
             exitButton.heightAnchor.constraint(equalToConstant: 44),
@@ -119,10 +104,19 @@ final class ProfileViewController: UIViewController {
             exitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ])
     }
-
+    
     // MARK: - Actions
-
     @objc private func didTapExitButton() {
         print("🚪 Выход")
+    }
+}
+
+    // MARK: - Extensions
+extension UIView {
+    func addSubviews(_ views: UIView...) {
+        views.forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            addSubview($0)
+        }
     }
 }

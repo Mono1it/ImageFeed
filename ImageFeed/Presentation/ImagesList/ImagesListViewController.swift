@@ -28,7 +28,20 @@ final class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == showSingleImageSegueIdentifier,
+                  let viewController = segue.destination as? SingleImageViewController,
+                  let indexPath = sender as? IndexPath else {
+                super.prepare(for: segue, sender: sender)
+                return
+            }
 
+            let imageName = "\(photosName[indexPath.row]).jpg"
+            let image = UIImage(named: imageName)
+            viewController.image = image
+    }
+    
     // MARK: - Public Methods
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let imageName = "\(photosName[indexPath.row]).jpg"
@@ -48,24 +61,8 @@ final class ImagesListViewController: UIViewController {
         let likeImageName = indexPath.row.isEven ? "Active" : "No Active"
         cell.likeButtonView.imageView?.image = UIImage(named: likeImageName)
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showSingleImageSegueIdentifier {
-            guard
-                let viewController = segue.destination as? SingleImageViewController,
-                let indexPath = sender as? IndexPath
-            else {
-                assertionFailure("Invalid segue destination")
-                return
-            }
-            let imageName = "\(photosName[indexPath.row]).jpg"
-            let image = UIImage(named: imageName)
-            viewController.image = image
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
-    }
 }
+
 // MARK: - TableView Data Source extension
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,7 +81,6 @@ extension ImagesListViewController: UITableViewDataSource {
         return imagesListCell
     }
 }
-
 
 // MARK: - TableView Delegate extension
 extension ImagesListViewController: UITableViewDelegate {
