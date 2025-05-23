@@ -8,6 +8,9 @@
 import UIKit
 
 final class ImagesListViewController: UIViewController {
+    // MARK: - Private Constants
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    
     // MARK: - IB Outlets
     @IBOutlet private var tableView: UITableView!
     
@@ -25,7 +28,20 @@ final class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == showSingleImageSegueIdentifier,
+                  let viewController = segue.destination as? SingleImageViewController,
+                  let indexPath = sender as? IndexPath else {
+                super.prepare(for: segue, sender: sender)
+                return
+            }
 
+            let imageName = "\(photosName[indexPath.row]).jpg"
+            let image = UIImage(named: imageName)
+            viewController.image = image
+    }
+    
     // MARK: - Public Methods
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let imageName = "\(photosName[indexPath.row]).jpg"
@@ -44,9 +60,9 @@ final class ImagesListViewController: UIViewController {
         // Установка лайка
         let likeImageName = indexPath.row.isEven ? "Active" : "No Active"
         cell.likeButtonView.imageView?.image = UIImage(named: likeImageName)
-        
     }
 }
+
 // MARK: - TableView Data Source extension
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -66,10 +82,11 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
-
 // MARK: - TableView Delegate extension
 extension ImagesListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let imageName = "\(photosName[indexPath.row]).jpg"
@@ -98,9 +115,9 @@ extension ImagesListViewController: UITableViewDelegate {
 // MARK: - Integer odd and even extention
 extension Int {
     var isEven: Bool {
-        return self % 2 == 0
+        self % 2 == 0
     }
     var isOdd: Bool {
-        return !isEven
+        !isEven
     }
 }
