@@ -11,7 +11,7 @@ protocol WebViewViewControllerDelegate: AnyObject {
 }
 
 final class WebViewViewController: UIViewController {
-    
+    private let accuracyThreshold = 0.0001
     // MARK: - Delegate
     weak var delegate: WebViewViewControllerDelegate?
     
@@ -61,7 +61,7 @@ final class WebViewViewController: UIViewController {
     // MARK: - Private Methods
     private func updateProgress() {
         progressBarView.progress = Float(webView.estimatedProgress)
-        progressBarView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+        progressBarView.isHidden = fabs(webView.estimatedProgress - 1.0) <= accuracyThreshold
     }
     
     private func loadWebView() {

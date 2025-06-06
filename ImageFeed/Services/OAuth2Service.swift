@@ -5,9 +5,17 @@ enum OAuth2ServiceConstants {
     static let unsplashURLString = "https://unsplash.com"
 }
 
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+}
+
 final class OAuth2Service {
     // MARK: - Private Constants
     static let shared = OAuth2Service()
+    private let decoder = JSONDecoder()
     private var tokenStorage : OAuth2TokenStorage
     
     // MARK: - Private Initializer
@@ -29,11 +37,12 @@ final class OAuth2Service {
             URLQueryItem(name: "grant_type", value: "authorization_code"),
         ]
         guard let url = components.url else {
-            fatalError("❌ Невозможно создать URL")
+            preconditionFailure("❌ Невозможно создать URL")
+            // Функция имеет возвращаемый тип Never и не нужно возвращать бессмысленное значение из функции в отличии от assertionFailure()
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = HTTPMethod.post.rawValue
         return request
     }
     
@@ -42,15 +51,15 @@ final class OAuth2Service {
         let request = makeOAuthTokenRequest(code: code)
         
         let task = URLSession.shared.data(for: request) { [weak self] result in
-            guard let self = self else {
-                completion(.failure(NetworkError.unknownError))
+            guard let self else {
+                completion(.failure(NetworkError.urlSessionError))
                 return
             }
             
             switch result {
             case .success(let data):
                 do {
-                    let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                    let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
                     print("✅ Получен токен: \(tokenResponse.accessToken)")
                     self.tokenStorage.token = tokenResponse.accessToken
                     completion(.success(tokenResponse.accessToken)) // Успешно декодировали
@@ -59,8 +68,14 @@ final class OAuth2Service {
                     completion(.failure(NetworkError.decodingError(error))) // Ошибка при декодировании
                 }
             case .failure(let error):
-                print("❌ Ошибка при выполнении запроса: \(error)")
-                completion(.failure(NetworkError.urlSessionError)) // Ошибка сети
+                // Нашёл вот такой интересный "синтаксический сахар", не хотел через switch описывать все случаи и наткнулся на вот такую кострукцию.
+                // Вопрос ревьюверу: Является ли это хорошей практикой или же стоило перебрать все ошибки через switch?
+                if case let NetworkError.httpStatusCode(code) = error {
+                    print("❌ Unsplash вернул ошибку. Код: \(code)")
+                } else {
+                    print("❌ Ошибка: \(error.localizedDescription)")
+                }
+                completion(.failure(error)) // Ошибка сети
             }
         }
         

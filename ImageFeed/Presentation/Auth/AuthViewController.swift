@@ -1,7 +1,7 @@
 import UIKit
 
 enum SegueIdentifier {
-    static let ShowWebView = "ShowWebView"
+    static let showWebView = "ShowWebView"
 }
 
 protocol AuthViewControllerDelegate: AnyObject {
@@ -20,11 +20,11 @@ final class AuthViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == SegueIdentifier.ShowWebView {
+        if segue.identifier == SegueIdentifier.showWebView {
             guard
                 let webViewVC = segue.destination as? WebViewViewController
             else {
-                assertionFailure("❌ Failed to prepare for \(SegueIdentifier.ShowWebView)")
+                assertionFailure("❌ Failed to prepare for \(SegueIdentifier.showWebView)")
                 return
             }
             webViewVC.delegate = self
