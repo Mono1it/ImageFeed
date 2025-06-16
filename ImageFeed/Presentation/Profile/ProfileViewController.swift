@@ -1,11 +1,16 @@
 import UIKit
+import ProgressHUD
 
 final class ProfileViewController: UIViewController {
+    
+    private var userName = "Екатерина Новикова"
+    private var userLogin = "@ekaterina_nov"
+    private var userDiscription = "Hello, world!"
     
     // MARK: - UI Elements
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = ProfileConstants.userName
+        //label.text = userName     //  Убрал мок данные
         label.textColor = UIColor(named: "YP White")
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         return label
@@ -13,7 +18,7 @@ final class ProfileViewController: UIViewController {
     
     private lazy var nickNameLabel: UILabel = {
         let label = UILabel()
-        label.text = ProfileConstants.userLogin
+        //label.text = userLogin    //  Убрал мок данные
         label.textColor = UIColor(named: "YP Gray")
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
@@ -21,7 +26,7 @@ final class ProfileViewController: UIViewController {
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = ProfileConstants.userDiscription
+        //label.text = userDiscription  //  Убрал мок данные
         label.textColor = UIColor(named: "YP White")
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
@@ -43,23 +48,31 @@ final class ProfileViewController: UIViewController {
         button.tintColor = UIColor(named: "YP Red")
         return button
     }()
-    
-    private enum ProfileConstants {
-        static let userName = "Екатерина Новикова"
-        static let userLogin = "@ekaterina_nov"
-        static let userDiscription = "Hello, world!"
-    }
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        UIBlockingProgressHUD.show()
+        ProfileService.shared.fetchProfile(OAuth2TokenStorageImplementation().token ?? "") { [weak self] result in
+            guard let self else { return }
+            
+            switch result {
+            case .success(let profile):
+                self.nameLabel.text = profile.name
+                self.nickNameLabel.text = profile.loginName
+                self.descriptionLabel.text = profile.bio
+                UIBlockingProgressHUD.dismiss()
+            case . failure(let error):
+                print("❌ Ошибка декодирования: \(error.localizedDescription)")
+                UIBlockingProgressHUD.dismiss()
+            }
+        }
         setupUI()
         setupProfileImageView()
         setupNameLabel()
         setupNicknameLabel()
         setupDescriptionLabel()
         setupExitButton()
-        //ProfileService.fetchProfile(ProfileService)
     }
     
     // MARK: - Setup Functions

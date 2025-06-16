@@ -6,8 +6,6 @@ final class UIBlockingProgressHUD {
         return UIApplication.shared.windows.first
     }
     
-    
-    
     static func show() {
         window?.isUserInteractionEnabled = false
         ProgressHUD.animationType = .ballVerticalBounce

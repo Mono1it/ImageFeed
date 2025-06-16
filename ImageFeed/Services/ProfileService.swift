@@ -9,7 +9,6 @@ final class ProfileService {
     private let decoder = JSONDecoder()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
-    private var lastToken: String?
     
     // MARK: - Private Initializer
     private init() {}
@@ -19,8 +18,8 @@ final class ProfileService {
         let username: String
         let firstName: String
         let lastName: String
-        let bio: String
-
+        let bio: String?
+        
         enum CodingKeys: String, CodingKey {
             case username = "username"
             case firstName = "first_name"
@@ -39,16 +38,17 @@ final class ProfileService {
             self.username = profileResult.username
             self.name = "\(profileResult.firstName) \(profileResult.lastName)"
             self.loginName = "@\(profileResult.username)"
-            self.bio = profileResult.bio
+            self.bio = profileResult.bio ?? ""
         }
     }
+    
     //MARK: - Methods
     func makeProfileRequest() -> URLRequest? {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.unsplash.com"
         components.path = "/me"
-
+        
         guard let url = components.url else {
             preconditionFailure("❌ Невозможно создать URL")
             // Функция имеет возвращаемый тип Never и не нужно возвращать бессмысленное значение из функции в отличии от assertionFailure()
@@ -73,7 +73,7 @@ final class ProfileService {
             completion(.failure(NetworkError.invalidRequest))
             return
         }
-
+        
         let task = urlSession.data(for: request) { [weak self] result in
             guard let self else {
                 completion(.failure(NetworkError.urlSessionError))
@@ -103,7 +103,6 @@ final class ProfileService {
                     }
                     completion(.failure(error)) // Ошибка сети
                 }
-                
             }
             self.task = nil
         }
