@@ -57,8 +57,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .success(let token):
                 print("✅ Токен получен: \(token)")
                 vc.dismiss(animated: true) { // Закрыли WebView
-                    UIBlockingProgressHUD.dismiss()
                     self.delegate?.didAuthenticate(self)
+                    UIBlockingProgressHUD.dismiss()
                 }
             case .failure(let error):
                 print("❌ Ошибка авторизации: \(error.localizedDescription)")

@@ -9,6 +9,7 @@ final class ProfileService {
     private let decoder = JSONDecoder()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
+    private(set) var profile: Profile?
     
     // MARK: - Private Initializer
     private init() {}
@@ -88,6 +89,7 @@ final class ProfileService {
                         let profileResponse = try self.decoder.decode(ProfileResult.self, from: data)
                         print("✅ Профиль получен: \(profileResponse.username) ")
                         let profile = Profile(profileResult: profileResponse)
+                        self.profile = profile
                         completion(.success(profile)) // Успешно декодировали
                     } catch {
                         print("❌ Ошибка декодирования: \(error.localizedDescription)")

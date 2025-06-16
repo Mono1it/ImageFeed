@@ -10,7 +10,13 @@ final class SplashViewController: UIViewController {
         super.viewDidAppear(animated)
         
         if storage.token != nil {
-            switchToTabBarController()
+            guard let token = storage.token else {
+                return
+            }
+            
+            fetchProfile(token)
+            
+            //switchToTabBarController()    //  Поместил его в fetchProfile(token)
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -70,6 +76,29 @@ extension SplashViewController {
 // MARK: - Extension
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
-        self.switchToTabBarController()
+
+        guard let token = storage.token else {
+            return
+        }
+        
+        fetchProfile(token)
+    }
+    
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        ProfileService.shared.fetchProfile(token) { [weak self] result in
+            guard let self else { return }
+            
+            UIBlockingProgressHUD.dismiss()
+            
+            switch result {
+            case .success(let profile):
+                print("✅ Профиль получен в didAuthenticate: \(profile.username) ")
+                self.switchToTabBarController()
+            case . failure(let error):
+                print("❌ Ошибка декодирования: \(error.localizedDescription)")
+                break
+            }
+        }
     }
 }
