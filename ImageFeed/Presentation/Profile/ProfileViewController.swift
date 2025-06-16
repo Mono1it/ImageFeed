@@ -59,6 +59,7 @@ final class ProfileViewController: UIViewController {
         setupNicknameLabel()
         setupDescriptionLabel()
         setupExitButton()
+        //ProfileService.fetchProfile(ProfileService)
     }
     
     // MARK: - Setup Functions

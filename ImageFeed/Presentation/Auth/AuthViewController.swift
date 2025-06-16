@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 enum SegueIdentifier {
     static let showWebView = "ShowWebView"
@@ -20,6 +21,7 @@ final class AuthViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         if segue.identifier == SegueIdentifier.showWebView {
             guard
                 let webViewVC = segue.destination as? WebViewViewController
@@ -45,15 +47,22 @@ final class AuthViewController: UIViewController {
 // MARK: - Extension
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        vc.dismiss(animated: true) // Закрыли WebView
+        //vc.dismiss(animated: true) // Закрыли WebView
+        UIBlockingProgressHUD.show()
         
-        OAuth2Service.shared.fetchOAuthToken(code: code) { result in
+        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
+            guard let self else { return }
+            
             switch result {
             case .success(let token):
                 print("✅ Токен получен: \(token)")
-                self.delegate?.didAuthenticate(self)
+                vc.dismiss(animated: true) { // Закрыли WebView
+                    UIBlockingProgressHUD.dismiss()
+                    self.delegate?.didAuthenticate(self)
+                }
             case .failure(let error):
                 print("❌ Ошибка авторизации: \(error.localizedDescription)")
+                UIBlockingProgressHUD.dismiss()
             }
         }
     }

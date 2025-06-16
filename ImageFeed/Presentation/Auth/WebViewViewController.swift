@@ -11,6 +11,7 @@ protocol WebViewViewControllerDelegate: AnyObject {
 }
 
 final class WebViewViewController: UIViewController {
+    // MARK: - Private Constants
     private let accuracyThreshold = 0.0001
     // MARK: - Delegate
     weak var delegate: WebViewViewControllerDelegate?

@@ -1,64 +1,74 @@
 import UIKit
-import WebKit
+import Foundation
 
-enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case delete = "DELETE"
-}
-
-final class OAuth2Service {
-    // MARK: - Private Constants
-    static let shared = OAuth2Service()
-    private let decoder = JSONDecoder()
-    private var tokenStorage : OAuth2TokenStorage
+final class ProfileService {
+    // MARK: - Singleton
+    static let shared = ProfileService()
     
+    // MARK: - Private Variables
+    private let decoder = JSONDecoder()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
-    private var lastCode: String?
+    private var lastToken: String?
     
     // MARK: - Private Initializer
-    private init(tokenStorage: OAuth2TokenStorage = OAuth2TokenStorageImplementation()) {
-        self.tokenStorage = tokenStorage
+    private init() {}
+    
+    //MARK: - Structs
+    struct ProfileResult: Codable {
+        let username: String
+        let firstName: String
+        let lastName: String
+        let bio: String
+
+        enum CodingKeys: String, CodingKey {
+            case username = "username"
+            case firstName = "first_name"
+            case lastName = "last_name"
+            case bio = "bio"
+        }
     }
     
-    // MARK: - Private Methods
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
+    struct Profile {
+        let username: String
+        let name: String
+        let loginName: String
+        let bio: String
+        
+        init(profileResult: ProfileService.ProfileResult) {
+            self.username = profileResult.username
+            self.name = "\(profileResult.firstName) \(profileResult.lastName)"
+            self.loginName = "@\(profileResult.username)"
+            self.bio = profileResult.bio
+        }
+    }
+    //MARK: - Methods
+    func makeProfileRequest() -> URLRequest? {
         var components = URLComponents()
         components.scheme = "https"
-        components.host = "unsplash.com"
-        components.path = "/oauth/token"
-        components.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "client_secret", value: Constants.secretKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "code", value: code),
-            URLQueryItem(name: "grant_type", value: "authorization_code"),
-        ]
+        components.host = "api.unsplash.com"
+        components.path = "/me"
+
         guard let url = components.url else {
             preconditionFailure("❌ Невозможно создать URL")
             // Функция имеет возвращаемый тип Never и не нужно возвращать бессмысленное значение из функции в отличии от assertionFailure()
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.post.rawValue
+        request.httpMethod = HTTPMethod.get.rawValue
+        
+        let token = OAuth2TokenStorageImplementation().token ?? ""
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
     
-    // MARK: - Iternal Methods
-    func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
-        guard lastCode != code else {
-            completion(.failure(NetworkError.invalidRequest))
-            return
-        }
         
         task?.cancel()
-        lastCode = code
         
         guard
-            let request = makeOAuthTokenRequest(code: code)
+            let request = makeProfileRequest()
         else {
             completion(.failure(NetworkError.invalidRequest))
             return
@@ -69,15 +79,16 @@ final class OAuth2Service {
                 completion(.failure(NetworkError.urlSessionError))
                 return
             }
+            
             DispatchQueue.main.async {
                 
                 switch result {
                 case .success(let data):
                     do {
-                        let tokenResponse = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        print("✅ Получен токен: \(tokenResponse.accessToken)")
-                        self.tokenStorage.token = tokenResponse.accessToken
-                        completion(.success(tokenResponse.accessToken)) // Успешно декодировали
+                        let profileResponse = try self.decoder.decode(ProfileResult.self, from: data)
+                        print("✅ Профиль получен: \(profileResponse.username) ")
+                        let profile = Profile(profileResult: profileResponse)
+                        completion(.success(profile)) // Успешно декодировали
                     } catch {
                         print("❌ Ошибка декодирования: \(error.localizedDescription)")
                         completion(.failure(NetworkError.decodingError(error))) // Ошибка при декодировании
@@ -95,9 +106,9 @@ final class OAuth2Service {
                 
             }
             self.task = nil
-            self.lastCode = nil
         }
         self.task = task
         task.resume()
     }
 }
+
