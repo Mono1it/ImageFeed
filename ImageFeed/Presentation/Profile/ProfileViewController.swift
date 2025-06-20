@@ -6,6 +6,7 @@ final class ProfileViewController: UIViewController {
     private var userName = "Екатерина Новикова"
     private var userLogin = "@ekaterina_nov"
     private var userDiscription = "Hello, world!"
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - UI Elements
     lazy var nameLabel: UILabel = {
@@ -57,6 +58,16 @@ final class ProfileViewController: UIViewController {
             updateProfileDetails(with: profile)
             }
         
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            self.updateProfileAvatar()
+        }
+        updateProfileAvatar()
+        
         setupUI()
         setupProfileImageView()
         setupNameLabel()
@@ -66,6 +77,17 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - Setup Functions
+    private func updateProfileAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL) else {
+            print("❌ Некорректный URL")
+            return
+        }
+        print("✅ Аватарка получена в updateProfileAvatar: \(url)")
+        //TODO: -
+    }
+    
     private func updateProfileDetails(with profile: ProfileService.Profile) {
         nameLabel.text = profile.name
         nickNameLabel.text = profile.loginName

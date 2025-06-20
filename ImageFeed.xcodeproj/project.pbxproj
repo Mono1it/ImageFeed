@@ -198,9 +198,9 @@
 			children = (
 				096B973D2DEDB12300CBF97C /* OAuth2Service.swift */,
 				09A160692DFF739300190764 /* ProfileService.swift */,
+				09A1606B2E0074D300190764 /* ProfileImageService.swift */,
 				096B97432DEF020600CBF97C /* OAuth2TokenStorageImplementation.swift */,
 				096B97452DEF030B00CBF97C /* OAuth2TokenStorage.swift */,
-				09A1606B2E0074D300190764 /* ProfileImageService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";

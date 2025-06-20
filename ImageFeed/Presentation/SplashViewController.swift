@@ -15,8 +15,8 @@ final class SplashViewController: UIViewController {
             }
             
             fetchProfile(token)
-            
             //switchToTabBarController()    //  Поместил его в fetchProfile(token)
+            
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -94,7 +94,22 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success(let profile):
                 print("✅ Профиль получен в didAuthenticate: \(profile.username) ")
+                fetchProfileImageURL(token)
                 self.switchToTabBarController()
+            case . failure(let error):
+                print("❌ Ошибка декодирования: \(error.localizedDescription)")
+                break
+            }
+        }
+    }
+    
+    private func fetchProfileImageURL(_ token: String) {
+        ProfileImageService.shared.fetchProfileImageURL(token) { [weak self] result in
+            guard let self else { return }
+            
+            switch result {
+            case .success(let avatar):
+                let avatarURL = ProfileImageService.shared.avatarURL
             case . failure(let error):
                 print("❌ Ошибка декодирования: \(error.localizedDescription)")
                 break
