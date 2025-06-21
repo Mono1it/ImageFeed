@@ -64,11 +64,11 @@ final class ProfileImageService {
         
         task?.cancel()
             
-        NotificationCenter.default                                     // 1
-            .post(                                                     // 2
-                name: ProfileImageService.didChangeNotification,       // 3
-                object: self,                                          // 4
-                userInfo: ["URL": self.avatarURL])                    // 5
+        NotificationCenter.default
+            .post(
+                name: ProfileImageService.didChangeNotification,
+                object: self,
+                userInfo: ["URL": self.avatarURL ?? ""])
         
         guard
             let request = makeProfileRequest()

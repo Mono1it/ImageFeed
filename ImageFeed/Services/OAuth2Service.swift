@@ -64,38 +64,59 @@ final class OAuth2Service {
             return
         }
 
-        let task = urlSession.data(for: request) { [weak self] result in
+//        let task = urlSession.data(for: request) { [weak self] result in
+//            guard let self else {
+//                completion(.failure(NetworkError.urlSessionError))
+//                return
+//            }
+//            DispatchQueue.main.async {
+//                
+//                switch result {
+//                case .success(let data):
+//                    do {
+//                        let tokenResponse = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
+//                        print("✅ Получен токен: \(tokenResponse.accessToken)")
+//                        self.tokenStorage.token = tokenResponse.accessToken
+//                        completion(.success(tokenResponse.accessToken)) // Успешно декодировали
+//                    } catch {
+//                        print("❌ Ошибка декодирования: \(error.localizedDescription)")
+//                        completion(.failure(NetworkError.decodingError(error))) // Ошибка при декодировании
+//                    }
+//                case .failure(let error):
+//                    // Нашёл вот такой интересный "синтаксический сахар", не хотел через switch описывать все случаи и наткнулся на вот такую кострукцию.
+//                    // Вопрос ревьюверу: Является ли это хорошей практикой или же стоило перебрать все ошибки через switch?
+//                    if case let NetworkError.httpStatusCode(code) = error {
+//                        print("❌ Unsplash вернул ошибку. Код: \(code)")
+//                    } else {
+//                        print("❌ Ошибка: \(error.localizedDescription)")
+//                    }
+//                    completion(.failure(error)) // Ошибка сети
+//                }
+//                
+//            }
+//            self.task = nil
+//            self.lastCode = nil
+//        }
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             guard let self else {
                 completion(.failure(NetworkError.urlSessionError))
                 return
             }
-            DispatchQueue.main.async {
-                
-                switch result {
-                case .success(let data):
-                    do {
-                        let tokenResponse = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        print("✅ Получен токен: \(tokenResponse.accessToken)")
-                        self.tokenStorage.token = tokenResponse.accessToken
-                        completion(.success(tokenResponse.accessToken)) // Успешно декодировали
-                    } catch {
-                        print("❌ Ошибка декодирования: \(error.localizedDescription)")
-                        completion(.failure(NetworkError.decodingError(error))) // Ошибка при декодировании
-                    }
-                case .failure(let error):
-                    // Нашёл вот такой интересный "синтаксический сахар", не хотел через switch описывать все случаи и наткнулся на вот такую кострукцию.
-                    // Вопрос ревьюверу: Является ли это хорошей практикой или же стоило перебрать все ошибки через switch?
-                    if case let NetworkError.httpStatusCode(code) = error {
-                        print("❌ Unsplash вернул ошибку. Код: \(code)")
-                    } else {
-                        print("❌ Ошибка: \(error.localizedDescription)")
-                    }
-                    completion(.failure(error)) // Ошибка сети
+            
+            switch result {
+            case .success(let tokenResponse):
+                    print("✅ Получен токен в OAuth2Service: \(tokenResponse.accessToken)")
+                    self.tokenStorage.token = tokenResponse.accessToken
+                    completion(.success(tokenResponse.accessToken)) // Успешно декодировали
+
+            case .failure(let error):
+                if case let NetworkError.httpStatusCode(code) = error {
+                    print("❌ Unsplash вернул ошибку. Код: \(code)")
+                } else {
+                    print("❌ Ошибка в OAuth2Service: \(error.localizedDescription)")
                 }
-                
+                completion(.failure(error)) // Ошибка сети
             }
-            self.task = nil
-            self.lastCode = nil
         }
         self.task = task
         task.resume()

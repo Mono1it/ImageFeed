@@ -97,22 +97,19 @@ extension SplashViewController: AuthViewControllerDelegate {
                 fetchProfileImageURL(token)
                 self.switchToTabBarController()
             case . failure(let error):
-                print("❌ Ошибка декодирования: \(error.localizedDescription)")
-                break
+                print("❌ Ошибка декодирования в fetchProfile: \(error.localizedDescription)")
             }
         }
     }
     
     private func fetchProfileImageURL(_ token: String) {
-        ProfileImageService.shared.fetchProfileImageURL(token) { [weak self] result in
-            guard let self else { return }
+        ProfileImageService.shared.fetchProfileImageURL(token) { result in
             
             switch result {
-            case .success(let avatar):
-                let avatarURL = ProfileImageService.shared.avatarURL
+            case .success(_):
+                print("✅ Аватарка получена в fetchProfileImageURL в SplashViewController")
             case . failure(let error):
-                print("❌ Ошибка декодирования: \(error.localizedDescription)")
-                break
+                print("❌ Ошибка декодирования в fetchProfileImageURL в SplashViewController: \(error.localizedDescription)")
             }
         }
     }
