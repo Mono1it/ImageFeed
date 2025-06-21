@@ -76,12 +76,8 @@ extension SplashViewController {
 // MARK: - Extension
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
-
-        guard let token = storage.token else {
-            return
-        }
-        
-        fetchProfile(token)
+        vc.dismiss(animated: true)  // Закрыли WebView
+        UIBlockingProgressHUD.dismiss()
     }
     
     private func fetchProfile(_ token: String) {

@@ -12,6 +12,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 final class AuthViewController: UIViewController {
     
     weak var delegate: AuthViewControllerDelegate?
+    private lazy var alertPresenter = AlertPresenter(viewController: self)
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -56,12 +57,15 @@ extension AuthViewController: WebViewViewControllerDelegate {
             switch result {
             case .success(let token):
                 print("✅ Токен получен: \(token)")
-                vc.dismiss(animated: true) { // Закрыли WebView
-                    self.delegate?.didAuthenticate(self)
-                    UIBlockingProgressHUD.dismiss()
-                }
+                self.delegate?.didAuthenticate(self)
+                
+//                vc.dismiss(animated: true) { // Закрыли WebView
+//                    self.delegate?.didAuthenticate(self)
+//                    UIBlockingProgressHUD.dismiss()
+//                }
             case .failure(let error):
                 print("❌ Ошибка авторизации: \(error.localizedDescription)")
+                showAlert()
                 UIBlockingProgressHUD.dismiss()
             }
         }
@@ -72,3 +76,16 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
 }
 
+extension AuthViewController: AlertPresenterDelegate {
+    func didAlertButtonTouch(alert: UIAlertController?) {
+        print("Ошибка в сетевом запросе в AuthViewController")
+    }
+    
+    func showAlert() {
+        //  создаём модель для AlertPresenter
+        let alertModel: AlertModel = AlertModel(title: "Что-то пошло не так",
+                                                message: "Не удалось войти в систему",
+                                                buttonText: "Ок", completion: {})
+        alertPresenter.requestAlertPresenter(model: alertModel)
+    }
+}

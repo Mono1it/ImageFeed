@@ -77,7 +77,7 @@ final class ProfileImageService {
             return
         }
         
-        let task = urlSession.data(for: request) { [weak self] result in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             guard let self else {
                 completion(.failure(NetworkError.urlSessionError))
                 return
@@ -86,20 +86,13 @@ final class ProfileImageService {
             DispatchQueue.main.async {
                 
                 switch result {
-                case .success(let data):
-                    do {
-                        let userResult = try self.decoder.decode(UserResult.self, from: data)
-                        print("✅ Аватарка получена")
-                        let avatarURL = userResult.profileImage.small
-                        self.avatarURL = avatarURL
-                        completion(.success(avatarURL)) // Успешно декодировали
-                    } catch {
-                        print("❌ Ошибка декодирования: \(error.localizedDescription)")
-                        completion(.failure(NetworkError.decodingError(error))) // Ошибка при декодировании
-                    }
+                case .success(let userResult):
+                    print("✅ Аватарка получена")
+                    let avatarURL = userResult.profileImage.small
+                    self.avatarURL = avatarURL
+                    completion(.success(avatarURL)) // Успешно декодировали
+                    
                 case .failure(let error):
-                    // Нашёл вот такой интересный "синтаксический сахар", не хотел через switch описывать все случаи и наткнулся на вот такую кострукцию.
-                    // Вопрос ревьюверу: Является ли это хорошей практикой или же стоило перебрать все ошибки через switch?
                     if case let NetworkError.httpStatusCode(code) = error {
                         print("❌ Unsplash вернул ошибку. Код: \(code)")
                     } else {

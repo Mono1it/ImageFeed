@@ -67,7 +67,7 @@ final class ProfileService {
         assert(Thread.isMainThread)
         print("🛑 Отменяем предыдущий task: \(task != nil ? "Да" : "Нет")")
         task?.cancel()
-        
+
         guard
             let request = makeProfileRequest()
         else {

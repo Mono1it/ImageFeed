@@ -22,6 +22,10 @@
 		09A160682DFF312500190764 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A160672DFF312500190764 /* UIBlockingProgressHUD.swift */; };
 		09A1606A2DFF739300190764 /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A160692DFF739300190764 /* ProfileService.swift */; };
 		09A1606C2E0074D300190764 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A1606B2E0074D300190764 /* ProfileImageService.swift */; };
+		09A1606F2E0746CB00190764 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A1606E2E0746CB00190764 /* AlertPresenter.swift */; };
+		09A160712E0746E600190764 /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A160702E0746E600190764 /* AlertModel.swift */; };
+		09A160732E07470100190764 /* AlertPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A160722E07470100190764 /* AlertPresenterProtocol.swift */; };
+		09A160752E07472600190764 /* AlertPresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A160742E07472600190764 /* AlertPresenterDelegate.swift */; };
 		09CFBADC2DBFA6D4008338DF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFBADB2DBFA6D4008338DF /* AppDelegate.swift */; };
 		09CFBADE2DBFA6D4008338DF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFBADD2DBFA6D4008338DF /* SceneDelegate.swift */; };
 		09CFBAE02DBFA6D4008338DF /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFBADF2DBFA6D4008338DF /* ImagesListViewController.swift */; };
@@ -67,6 +71,10 @@
 		09A160672DFF312500190764 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		09A160692DFF739300190764 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		09A1606B2E0074D300190764 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
+		09A1606E2E0746CB00190764 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		09A160702E0746E600190764 /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
+		09A160722E07470100190764 /* AlertPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenterProtocol.swift; sourceTree = "<group>"; };
+		09A160742E07472600190764 /* AlertPresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenterDelegate.swift; sourceTree = "<group>"; };
 		09CFBAD82DBFA6D4008338DF /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09CFBADB2DBFA6D4008338DF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		09CFBADD2DBFA6D4008338DF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -138,6 +146,17 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		09A1606D2E0746B300190764 /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				09A1606E2E0746CB00190764 /* AlertPresenter.swift */,
+				09A160702E0746E600190764 /* AlertModel.swift */,
+				09A160722E07470100190764 /* AlertPresenterProtocol.swift */,
+				09A160742E07472600190764 /* AlertPresenterDelegate.swift */,
+			);
+			path = Alert;
+			sourceTree = "<group>";
+		};
 		09CFBACF2DBFA6D4008338DF = {
 			isa = PBXGroup;
 			children = (
@@ -183,6 +202,7 @@
 		09CFBAF02DC0CD12008338DF /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				09A1606D2E0746B300190764 /* Alert */,
 				0908D5AA2DE8799A002CACFC /* Auth */,
 				09D536A02DD3485B00D958FA /* Profile */,
 				09CFBB3E2DCFA7EF008338DF /* ImagesList */,
@@ -363,6 +383,7 @@
 				096B97422DEEFB1F00CBF97C /* OAuthTokenResponse.swift in Sources */,
 				0908D5AC2DE879B5002CACFC /* AuthViewController.swift in Sources */,
 				09A1606A2DFF739300190764 /* ProfileService.swift in Sources */,
+				09A160712E0746E600190764 /* AlertModel.swift in Sources */,
 				096B97462DEF030B00CBF97C /* OAuth2TokenStorage.swift in Sources */,
 				0908D5A92DE5D313002CACFC /* Constants.swift in Sources */,
 				09D536A22DD3487400D958FA /* SingleImageViewController.swift in Sources */,
@@ -370,8 +391,11 @@
 				096B97402DEDBE5A00CBF97C /* URLSession+data.swift in Sources */,
 				093F4E6F2DE9AED300924668 /* WebViewViewController.swift in Sources */,
 				096B973E2DEDB12300CBF97C /* OAuth2Service.swift in Sources */,
+				09A1606F2E0746CB00190764 /* AlertPresenter.swift in Sources */,
 				09A1606C2E0074D300190764 /* ProfileImageService.swift in Sources */,
 				096B97442DEF020600CBF97C /* OAuth2TokenStorageImplementation.swift in Sources */,
+				09A160732E07470100190764 /* AlertPresenterProtocol.swift in Sources */,
+				09A160752E07472600190764 /* AlertPresenterDelegate.swift in Sources */,
 				09CFBADE2DBFA6D4008338DF /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
