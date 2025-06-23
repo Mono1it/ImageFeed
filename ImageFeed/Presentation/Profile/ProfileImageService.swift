@@ -64,12 +64,6 @@ final class ProfileImageService {
         
         task?.cancel()
             
-        NotificationCenter.default
-            .post(
-                name: ProfileImageService.didChangeNotification,
-                object: self,
-                userInfo: ["URL": self.avatarURL ?? ""])
-        
         guard
             let request = makeProfileRequest()
         else {
@@ -87,10 +81,15 @@ final class ProfileImageService {
                 
                 switch result {
                 case .success(let userResult):
-                    print("✅ Аватарка получена")
+                    print("✅ Аватарка получена в ProfileImageService")
                     let avatarURL = userResult.profileImage.small
                     self.avatarURL = avatarURL
                     completion(.success(avatarURL)) // Успешно декодировали
+                    NotificationCenter.default
+                        .post(
+                            name: ProfileImageService.didChangeNotification,
+                            object: self,
+                            userInfo: ["URL": self.avatarURL ?? ""])
                     
                 case .failure(let error):
                     if case let NetworkError.httpStatusCode(code) = error {

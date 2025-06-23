@@ -1,5 +1,6 @@
 import UIKit
 import ProgressHUD
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -35,7 +36,7 @@ final class ProfileViewController: UIViewController {
     
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "Photo")
+        imageView.image = UIImage(named: "Empty Profile Image")
         imageView.tintColor = .gray
         return imageView
     }()
@@ -66,7 +67,6 @@ final class ProfileViewController: UIViewController {
             guard let self else { return }
             self.updateProfileAvatar()
         }
-        updateProfileAvatar()
         
         setupUI()
         setupProfileImageView()
@@ -85,7 +85,12 @@ final class ProfileViewController: UIViewController {
             return
         }
         print("✅ Аватарка получена в updateProfileAvatar: \(url)")
-        //TODO: -
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        profileImageView.kf.indicatorType = .activity
+        let imageUrl = url
+        profileImageView.kf.setImage(with: imageUrl,
+                              placeholder: UIImage(named: "Empty Profile Image"),
+                              options: [.processor(processor)])
     }
     
     private func updateProfileDetails(with profile: ProfileService.Profile) {
