@@ -1,17 +1,19 @@
 import UIKit
+import SwiftKeychainWrapper
 
 final class SplashViewController: UIViewController {
     // MARK: - Private Constants
-    private let storage = OAuth2TokenStorageImplementation()
+    //private let storage = OAuth2TokenStorageImplementation()
     private let showAuthenticationScreenSegueIdentifier = "showAuthentication"
     
     // MARK: - Lifecycle
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if storage.token != nil {
-            guard let token = storage.token else {
-                return
+        let token: String? = KeychainWrapper.standard.string(forKey: "Auth token")
+        if token != nil {
+            guard let token = token else {
+                preconditionFailure("❌ Не удалось развернуть токен")
             }
             
             fetchProfile(token)

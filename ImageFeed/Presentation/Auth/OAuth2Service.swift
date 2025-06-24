@@ -1,5 +1,6 @@
 import UIKit
 import WebKit
+import SwiftKeychainWrapper
 
 enum HTTPMethod: String {
     case get = "GET"
@@ -12,16 +13,14 @@ final class OAuth2Service {
     // MARK: - Private Constants
     static let shared = OAuth2Service()
     private let decoder = JSONDecoder()
-    private var tokenStorage : OAuth2TokenStorage
+    //private var tokenStorage : OAuth2TokenStorage
     
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastCode: String?
     
     // MARK: - Private Initializer
-    private init(tokenStorage: OAuth2TokenStorage = OAuth2TokenStorageImplementation()) {
-        self.tokenStorage = tokenStorage
-    }
+    private init() { }
     
     // MARK: - Private Methods
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
@@ -63,52 +62,21 @@ final class OAuth2Service {
             completion(.failure(NetworkError.invalidRequest))
             return
         }
-
-//        let task = urlSession.data(for: request) { [weak self] result in
-//            guard let self else {
-//                completion(.failure(NetworkError.urlSessionError))
-//                return
-//            }
-//            DispatchQueue.main.async {
-//                
-//                switch result {
-//                case .success(let data):
-//                    do {
-//                        let tokenResponse = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
-//                        print("✅ Получен токен: \(tokenResponse.accessToken)")
-//                        self.tokenStorage.token = tokenResponse.accessToken
-//                        completion(.success(tokenResponse.accessToken)) // Успешно декодировали
-//                    } catch {
-//                        print("❌ Ошибка декодирования: \(error.localizedDescription)")
-//                        completion(.failure(NetworkError.decodingError(error))) // Ошибка при декодировании
-//                    }
-//                case .failure(let error):
-//                    // Нашёл вот такой интересный "синтаксический сахар", не хотел через switch описывать все случаи и наткнулся на вот такую кострукцию.
-//                    // Вопрос ревьюверу: Является ли это хорошей практикой или же стоило перебрать все ошибки через switch?
-//                    if case let NetworkError.httpStatusCode(code) = error {
-//                        print("❌ Unsplash вернул ошибку. Код: \(code)")
-//                    } else {
-//                        print("❌ Ошибка: \(error.localizedDescription)")
-//                    }
-//                    completion(.failure(error)) // Ошибка сети
-//                }
-//                
-//            }
-//            self.task = nil
-//            self.lastCode = nil
-//        }
-        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
-            guard let self else {
-                completion(.failure(NetworkError.urlSessionError))
-                return
-            }
+        
+        let task = urlSession.objectTask(for: request) { (result: Result<OAuthTokenResponseBody, Error>) in
             
             switch result {
             case .success(let tokenResponse):
-                    print("✅ Получен токен в OAuth2Service: \(tokenResponse.accessToken)")
-                    self.tokenStorage.token = tokenResponse.accessToken
-                    completion(.success(tokenResponse.accessToken)) // Успешно декодировали
-
+                print("✅ Получен токен в OAuth2Service: \(tokenResponse.accessToken)")
+                let token = tokenResponse.accessToken
+                let isSuccess = KeychainWrapper.standard.set(token, forKey: "Auth token")
+                guard isSuccess else {
+                    print("❌ Не удалось сохранить токен в keyChain")
+                    return
+                }
+                //self.tokenStorage.token = tokenResponse.accessToken
+                completion(.success(tokenResponse.accessToken)) // Успешно декодировали
+                
             case .failure(let error):
                 if case let NetworkError.httpStatusCode(code) = error {
                     print("❌ Unsplash вернул ошибку. Код: \(code)")

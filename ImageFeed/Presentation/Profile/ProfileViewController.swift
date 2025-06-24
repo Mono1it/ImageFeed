@@ -68,6 +68,7 @@ final class ProfileViewController: UIViewController {
             self.updateProfileAvatar()
         }
         
+        updateProfileAvatar()
         setupUI()
         setupProfileImageView()
         setupNameLabel()

@@ -48,7 +48,6 @@ final class AuthViewController: UIViewController {
 // MARK: - Extension
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        //vc.dismiss(animated: true) // Закрыли WebView
         UIBlockingProgressHUD.show()
         
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
@@ -58,11 +57,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .success(let token):
                 print("✅ Токен получен: \(token)")
                 self.delegate?.didAuthenticate(self)
-                
-//                vc.dismiss(animated: true) { // Закрыли WebView
-//                    self.delegate?.didAuthenticate(self)
-//                    UIBlockingProgressHUD.dismiss()
-//                }
             case .failure(let error):
                 print("❌ Ошибка авторизации: \(error.localizedDescription)")
                 showAlert()

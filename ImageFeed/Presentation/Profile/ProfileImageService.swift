@@ -1,5 +1,6 @@
 import UIKit
 import Foundation
+import SwiftKeychainWrapper
 
 final class ProfileImageService {
     // MARK: - Singleton
@@ -54,7 +55,10 @@ final class ProfileImageService {
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.get.rawValue
         
-        let token = OAuth2TokenStorageImplementation().token ?? ""
+        let token: String? = KeychainWrapper.standard.string(forKey: "Auth token")
+        guard let token = token else {
+            preconditionFailure("❌ Не удалось развернуть токен")
+        }
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
