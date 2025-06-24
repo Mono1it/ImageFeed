@@ -54,7 +54,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         if let profile = ProfileService.shared.profile {
             updateProfileDetails(with: profile)
             }
@@ -102,6 +102,7 @@ final class ProfileViewController: UIViewController {
     
     private func setupUI() {
         view.addSubviews(profileImageView, nameLabel, nickNameLabel, descriptionLabel, exitButton)
+        view.backgroundColor = UIColor(named: "YP Black")
     }
     
     private func setupProfileImageView() {

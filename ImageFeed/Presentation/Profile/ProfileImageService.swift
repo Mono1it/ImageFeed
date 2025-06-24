@@ -41,11 +41,11 @@ final class ProfileImageService {
     }
     
     //MARK: - Methods
-    func makeProfileRequest() -> URLRequest? {
+    func makeProfileRequest(username: String) -> URLRequest? {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.unsplash.com"
-        components.path = "/me"
+        components.path = "/users/\(username)"
         
         guard let url = components.url else {
             preconditionFailure("❌ Невозможно создать URL")
@@ -63,13 +63,13 @@ final class ProfileImageService {
         return request
     }
     
-    func fetchProfileImageURL(_ token: String, completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchProfileImageURL(username: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
         task?.cancel()
             
         guard
-            let request = makeProfileRequest()
+            let request = makeProfileRequest(username: username)
         else {
             completion(.failure(NetworkError.invalidRequest))
             return

@@ -74,7 +74,6 @@ final class OAuth2Service {
                     print("❌ Не удалось сохранить токен в keyChain")
                     return
                 }
-                //self.tokenStorage.token = tokenResponse.accessToken
                 completion(.success(tokenResponse.accessToken)) // Успешно декодировали
                 
             case .failure(let error):

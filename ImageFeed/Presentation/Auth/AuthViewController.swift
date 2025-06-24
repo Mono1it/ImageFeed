@@ -56,6 +56,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
             switch result {
             case .success(let token):
                 print("✅ Токен получен: \(token)")
+                vc.dismiss(animated: true)  // Закрыли WebView
+                UIBlockingProgressHUD.dismiss()
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
                 print("❌ Ошибка авторизации: \(error.localizedDescription)")
@@ -72,7 +74,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
 
 extension AuthViewController: AlertPresenterDelegate {
     func didAlertButtonTouch(alert: UIAlertController?) {
-        print("Ошибка в сетевом запросе в AuthViewController")
+        print("❌ Ошибка в сетевом запросе в AuthViewController")
     }
     
     func showAlert() {
