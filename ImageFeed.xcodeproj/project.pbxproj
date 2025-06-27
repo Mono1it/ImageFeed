@@ -15,6 +15,7 @@
 		094AEE502E099B220096CD4F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 094AEE4F2E099B220096CD4F /* Kingfisher */; };
 		094AEE532E09C0E30096CD4F /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 094AEE522E09C0E30096CD4F /* SwiftKeychainWrapper */; };
 		094AEE552E0AD8B30096CD4F /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094AEE542E0AD8B30096CD4F /* TabBarController.swift */; };
+		094AEE632E0EEC610096CD4F /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094AEE622E0EEC610096CD4F /* KeychainService.swift */; };
 		096B973E2DEDB12300CBF97C /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B973D2DEDB12300CBF97C /* OAuth2Service.swift */; };
 		096B97402DEDBE5A00CBF97C /* URLSession+data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B973F2DEDBE5A00CBF97C /* URLSession+data.swift */; };
 		096B97422DEEFB1F00CBF97C /* OAuthTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B97412DEEFB1F00CBF97C /* OAuthTokenResponse.swift */; };
@@ -66,6 +67,7 @@
 		093F4E6E2DE9AED300924668 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		093F4E712DE9C54500924668 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		094AEE542E0AD8B30096CD4F /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		094AEE622E0EEC610096CD4F /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		096B973D2DEDB12300CBF97C /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		096B973F2DEDBE5A00CBF97C /* URLSession+data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+data.swift"; sourceTree = "<group>"; };
 		096B97412DEEFB1F00CBF97C /* OAuthTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponse.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				096B97452DEF030B00CBF97C /* OAuth2TokenStorage.swift */,
 				0908D5AB2DE879B5002CACFC /* AuthViewController.swift */,
 				093F4E6E2DE9AED300924668 /* WebViewViewController.swift */,
+				094AEE622E0EEC610096CD4F /* KeychainService.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 				0907C5292DD23E6600DAB97E /* ProfileViewController.swift in Sources */,
 				09A160682DFF312500190764 /* UIBlockingProgressHUD.swift in Sources */,
 				09CFBADC2DBFA6D4008338DF /* AppDelegate.swift in Sources */,
+				094AEE632E0EEC610096CD4F /* KeychainService.swift in Sources */,
 				094AEE552E0AD8B30096CD4F /* TabBarController.swift in Sources */,
 				096B97422DEEFB1F00CBF97C /* OAuthTokenResponse.swift in Sources */,
 				0908D5AC2DE879B5002CACFC /* AuthViewController.swift in Sources */,

@@ -13,7 +13,6 @@ final class OAuth2Service {
     // MARK: - Private Constants
     static let shared = OAuth2Service()
     private let decoder = JSONDecoder()
-    //private var tokenStorage : OAuth2TokenStorage
     
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
@@ -21,29 +20,6 @@ final class OAuth2Service {
     
     // MARK: - Private Initializer
     private init() { }
-    
-    // MARK: - Private Methods
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "unsplash.com"
-        components.path = "/oauth/token"
-        components.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "client_secret", value: Constants.secretKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "code", value: code),
-            URLQueryItem(name: "grant_type", value: "authorization_code"),
-        ]
-        guard let url = components.url else {
-            preconditionFailure("❌ Невозможно создать URL")
-            // Функция имеет возвращаемый тип Never и не нужно возвращать бессмысленное значение из функции в отличии от assertionFailure()
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.post.rawValue
-        return request
-    }
     
     // MARK: - Iternal Methods
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
@@ -87,5 +63,28 @@ final class OAuth2Service {
         }
         self.task = task
         task.resume()
+    }
+    
+    // MARK: - Private Methods
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "unsplash.com"
+        components.path = "/oauth/token"
+        components.queryItems = [
+            URLQueryItem(name: "client_id", value: Constants.accessKey),
+            URLQueryItem(name: "client_secret", value: Constants.secretKey),
+            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code"),
+        ]
+        guard let url = components.url else {
+            preconditionFailure("❌ Невозможно создать URL")
+            // Функция имеет возвращаемый тип Never и не нужно возвращать бессмысленное значение из функции в отличии от assertionFailure()
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.post.rawValue
+        return request
     }
 }

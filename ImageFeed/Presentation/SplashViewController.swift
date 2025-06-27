@@ -1,5 +1,5 @@
 import UIKit
-import SwiftKeychainWrapper
+
 
 final class SplashViewController: UIViewController, UINavigationControllerDelegate {
     // MARK: - UI Elements
@@ -21,21 +21,11 @@ final class SplashViewController: UIViewController, UINavigationControllerDelega
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        let token: String? = KeychainWrapper.standard.string(forKey: "Auth token")
-        if token != nil {
-            guard let token = token else {
-                preconditionFailure("❌ Не удалось развернуть токен")
-            }
-            
-            fetchProfile(token)
-            
-        } else {
-            
+        
+        guard let token = KeychainService.shared.getToken(for: "Auth token") else {
+            // Переход на AuthViewController
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
-            // Загружаем UINavigationController по его ID
-            guard let navigationController = storyboard.instantiateViewController(withIdentifier: "UINavigationController") as? UINavigationController,
-                  let authViewController = navigationController.viewControllers.first as? AuthViewController
+            guard let navigationController = storyboard.instantiateViewController(withIdentifier: "UINavigationController") as? UINavigationController
             else {
                 assertionFailure("❌ Не удалось загрузить AuthViewController из Storyboard")
                 return
@@ -43,7 +33,11 @@ final class SplashViewController: UIViewController, UINavigationControllerDelega
             navigationController.delegate = self
             navigationController.modalPresentationStyle = .fullScreen
             present(navigationController, animated: true)
+            return
         }
+        
+        // Токен успешно получен
+        fetchProfile(token)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,9 +88,8 @@ extension SplashViewController: AuthViewControllerDelegate {
     private func fetchProfile(_ token: String) {
         UIBlockingProgressHUD.show()
         ProfileService.shared.fetchProfile(token) { [weak self] result in
-            guard let self else { return }
-            
             UIBlockingProgressHUD.dismiss()
+            guard let self else { return }
             
             switch result {
             case .success(let profile):
@@ -113,7 +106,7 @@ extension SplashViewController: AuthViewControllerDelegate {
         ProfileImageService.shared.fetchProfileImageURL(username: username) { result in
             
             switch result {
-            case .success(_):
+            case .success:
                 print("✅ Аватарка получена в fetchProfileImageURL в SplashViewController")
             case . failure(let error):
                 print("❌ Ошибка декодирования в fetchProfileImageURL в SplashViewController: \(error.localizedDescription)")

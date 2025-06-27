@@ -24,7 +24,7 @@ final class WebViewViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         webView.navigationDelegate = self
         
         loadWebView()
@@ -54,7 +54,7 @@ final class WebViewViewController: UIViewController {
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "scope", value: Constants.accessScope)
         ]
-
+        
         if let url = urlComponents?.url {
             let request = URLRequest(url: url)
             webView.load(request)

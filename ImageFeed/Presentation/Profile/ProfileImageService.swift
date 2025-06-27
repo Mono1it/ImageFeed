@@ -1,6 +1,4 @@
 import UIKit
-import Foundation
-import SwiftKeychainWrapper
 
 final class ProfileImageService {
     // MARK: - Singleton
@@ -8,7 +6,7 @@ final class ProfileImageService {
     
     // MARK: - Notification
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
-
+    
     // MARK: - Private Variables
     private let decoder = JSONDecoder()
     private let urlSession = URLSession.shared
@@ -33,41 +31,19 @@ final class ProfileImageService {
     }
     
     struct ProfileAvatar {
-        let ProfileAvatarURL: String
+        let profileAvatarURL: String
         
         init(userResult: UserResult) {
-            self.ProfileAvatarURL = userResult.profileImage.small
+            self.profileAvatarURL = userResult.profileImage.small
         }
     }
     
-    //MARK: - Methods
-    func makeProfileRequest(username: String) -> URLRequest? {
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.unsplash.com"
-        components.path = "/users/\(username)"
-        
-        guard let url = components.url else {
-            preconditionFailure("❌ Невозможно создать URL")
-            // Функция имеет возвращаемый тип Never и не нужно возвращать бессмысленное значение из функции в отличии от assertionFailure()
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.get.rawValue
-        
-        let token: String? = KeychainWrapper.standard.string(forKey: "Auth token")
-        guard let token = token else {
-            preconditionFailure("❌ Не удалось развернуть токен")
-        }
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        return request
-    }
-    
+    //MARK: - Iternal Methods
     func fetchProfileImageURL(username: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
         task?.cancel()
-            
+        
         guard
             let request = makeProfileRequest(username: username)
         else {
@@ -109,5 +85,27 @@ final class ProfileImageService {
         self.task = task
         task.resume()
     }
+    
+    //MARK: - Private Methods
+    private func makeProfileRequest(username: String) -> URLRequest? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "api.unsplash.com"
+        components.path = "/users/\(username)"
+        
+        guard let url = components.url else {
+            preconditionFailure("❌ Невозможно создать URL")
+            // Функция имеет возвращаемый тип Never и не нужно возвращать бессмысленное значение из функции в отличии от assertionFailure()
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.get.rawValue
+        
+        let token: String? = KeychainService.shared.getToken(for: "Auth token")
+        guard let token = token else {
+            preconditionFailure("❌ Не удалось развернуть токен")
+        }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
+    }
 }
-

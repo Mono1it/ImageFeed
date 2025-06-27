@@ -1,10 +1,3 @@
-//
-//  URLSession+data.swift
-//  ImageFeed
-//
-//  Created by Ilya Shcherbakov on 02.06.2025.
-//
-
 import Foundation
 
 enum NetworkError: Error {  // 1

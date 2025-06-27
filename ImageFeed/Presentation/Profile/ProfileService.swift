@@ -1,6 +1,4 @@
 import UIKit
-import Foundation
-import SwiftKeychainWrapper
 
 final class ProfileService {
     // MARK: - Singleton
@@ -23,10 +21,10 @@ final class ProfileService {
         let bio: String?
         
         enum CodingKeys: String, CodingKey {
-            case username = "username"
+            case username
             case firstName = "first_name"
             case lastName = "last_name"
-            case bio = "bio"
+            case bio
         }
     }
     
@@ -59,7 +57,7 @@ final class ProfileService {
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.get.rawValue
         
-        let token: String? = KeychainWrapper.standard.string(forKey: "Auth token")
+        let token: String? = KeychainService.shared.getToken(for: "Auth token")
         guard let token = token else {
             preconditionFailure("❌ Не удалось развернуть токен")
         }
@@ -71,7 +69,7 @@ final class ProfileService {
         assert(Thread.isMainThread)
         print("🛑 Отменяем предыдущий task: \(task != nil ? "Да" : "Нет")")
         task?.cancel()
-
+        
         guard
             let request = makeProfileRequest()
         else {

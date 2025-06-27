@@ -13,7 +13,7 @@ final class ProfileViewController: UIViewController {
     lazy var nameLabel: UILabel = {
         let label = UILabel()
         //label.text = userName     //  Убрал мок данные
-        label.textColor = UIColor(named: "YP White")
+        label.textColor = UIColor(resource: .ypWhite)
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         return label
     }()
@@ -21,7 +21,7 @@ final class ProfileViewController: UIViewController {
     lazy var nickNameLabel: UILabel = {
         let label = UILabel()
         //label.text = userLogin    //  Убрал мок данные
-        label.textColor = UIColor(named: "YP Gray")
+        label.textColor = UIColor(resource: .ypGray)
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
     }()
@@ -29,35 +29,35 @@ final class ProfileViewController: UIViewController {
     lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         //label.text = userDiscription  //  Убрал мок данные
-        label.textColor = UIColor(named: "YP White")
+        label.textColor = UIColor(resource: .ypWhite)
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
     }()
     
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "Empty Profile Image")
+        imageView.image = UIImage(resource: .emptyProfile)
         imageView.tintColor = .gray
         return imageView
     }()
     
     private lazy var exitButton: UIButton = {
         let button = UIButton.systemButton(
-            with: UIImage(named: "Exit") ?? UIImage(),
+            with: UIImage(resource: .exit),
             target: self,
             action: #selector(didTapExitButton)
         )
-        button.tintColor = UIColor(named: "YP Red")
+        button.tintColor = UIColor(resource: .ypRed)
         return button
     }()
-
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let profile = ProfileService.shared.profile {
             updateProfileDetails(with: profile)
-            }
+        }
         
         profileImageServiceObserver = NotificationCenter.default.addObserver(
             forName: ProfileImageService.didChangeNotification,
@@ -90,8 +90,8 @@ final class ProfileViewController: UIViewController {
         profileImageView.kf.indicatorType = .activity
         let imageUrl = url
         profileImageView.kf.setImage(with: imageUrl,
-                              placeholder: UIImage(named: "Empty Profile Image"),
-                              options: [.processor(processor)])
+                                     placeholder: UIImage(resource: .emptyProfile),
+                                     options: [.processor(processor)])
     }
     
     private func updateProfileDetails(with profile: ProfileService.Profile) {
@@ -102,7 +102,7 @@ final class ProfileViewController: UIViewController {
     
     private func setupUI() {
         view.addSubviews(profileImageView, nameLabel, nickNameLabel, descriptionLabel, exitButton)
-        view.backgroundColor = UIColor(named: "YP Black")
+        view.backgroundColor = UIColor(resource: .ypBlack)
     }
     
     private func setupProfileImageView() {
@@ -150,7 +150,7 @@ final class ProfileViewController: UIViewController {
     }
 }
 
-    // MARK: - Extensions
+// MARK: - Extensions
 extension UIView {
     func addSubviews(_ views: UIView...) {
         views.forEach {

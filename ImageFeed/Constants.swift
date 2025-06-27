@@ -1,10 +1,3 @@
-//
-//  Constants.swift
-//  ImageFeed
-//
-//  Created by Ilya Shcherbakov on 27.05.2025.
-//
-
 import Foundation
 
 enum Constants {
@@ -16,4 +9,3 @@ enum Constants {
     static let defaultBaseURL = URL(string: "https://api.unsplash.com") 
     // Оставил опцианальной, а не вычисляемой, так как эта переменная в коде ни разу не вызывалась. При вызове просто нужно будет распаковать опционал.
 }
-
