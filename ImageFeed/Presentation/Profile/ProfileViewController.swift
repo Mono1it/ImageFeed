@@ -1,58 +1,74 @@
 import UIKit
+import ProgressHUD
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
+    private var userName = "Екатерина Новикова"
+    private var userLogin = "@ekaterina_nov"
+    private var userDiscription = "Hello, world!"
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     // MARK: - UI Elements
-    private lazy var nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = ProfileConstants.userName
-        label.textColor = UIColor(named: "YP White")
+        //label.text = userName     //  Убрал мок данные
+        label.textColor = UIColor(resource: .ypWhite)
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         return label
     }()
     
-    private lazy var nickNameLabel: UILabel = {
+    lazy var nickNameLabel: UILabel = {
         let label = UILabel()
-        label.text = ProfileConstants.userLogin
-        label.textColor = UIColor(named: "YP Gray")
+        //label.text = userLogin    //  Убрал мок данные
+        label.textColor = UIColor(resource: .ypGray)
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
     }()
     
-    private lazy var descriptionLabel: UILabel = {
+    lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = ProfileConstants.userDiscription
-        label.textColor = UIColor(named: "YP White")
+        //label.text = userDiscription  //  Убрал мок данные
+        label.textColor = UIColor(resource: .ypWhite)
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
     }()
     
-    private lazy var profileImageView: UIImageView = {
+    lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "Photo")
+        imageView.image = UIImage(resource: .emptyProfile)
         imageView.tintColor = .gray
         return imageView
     }()
     
     private lazy var exitButton: UIButton = {
         let button = UIButton.systemButton(
-            with: UIImage(named: "Exit") ?? UIImage(),
+            with: UIImage(resource: .exit),
             target: self,
             action: #selector(didTapExitButton)
         )
-        button.tintColor = UIColor(named: "YP Red")
+        button.tintColor = UIColor(resource: .ypRed)
         return button
     }()
     
-    private enum ProfileConstants {
-        static let userName = "Екатерина Новикова"
-        static let userLogin = "@ekaterina_nov"
-        static let userDiscription = "Hello, world!"
-    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let profile = ProfileService.shared.profile {
+            updateProfileDetails(with: profile)
+        }
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            self.updateProfileAvatar()
+        }
+        
+        updateProfileAvatar()
         setupUI()
         setupProfileImageView()
         setupNameLabel()
@@ -62,8 +78,31 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - Setup Functions
+    private func updateProfileAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL) else {
+            print("❌ Некорректный URL")
+            return
+        }
+        print("✅ Аватарка получена в updateProfileAvatar: \(url)")
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        profileImageView.kf.indicatorType = .activity
+        let imageUrl = url
+        profileImageView.kf.setImage(with: imageUrl,
+                                     placeholder: UIImage(resource: .emptyProfile),
+                                     options: [.processor(processor)])
+    }
+    
+    private func updateProfileDetails(with profile: ProfileService.Profile) {
+        nameLabel.text = profile.name
+        nickNameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
+    }
+    
     private func setupUI() {
         view.addSubviews(profileImageView, nameLabel, nickNameLabel, descriptionLabel, exitButton)
+        view.backgroundColor = UIColor(resource: .ypBlack)
     }
     
     private func setupProfileImageView() {
@@ -111,7 +150,7 @@ final class ProfileViewController: UIViewController {
     }
 }
 
-    // MARK: - Extensions
+// MARK: - Extensions
 extension UIView {
     func addSubviews(_ views: UIView...) {
         views.forEach {

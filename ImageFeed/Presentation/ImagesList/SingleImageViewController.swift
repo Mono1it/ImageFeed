@@ -1,10 +1,3 @@
-//
-//  SingleImageViewController.swift
-//  ImageFeed
-//
-//  Created by Ilya Shcherbakov on 13.05.2025.
-//
-
 import UIKit
 
 final class SingleImageViewController: UIViewController {
@@ -76,7 +69,7 @@ final class SingleImageViewController: UIViewController {
     }
 }
 
-    // MARK: - Extensions
+// MARK: - Extensions
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView

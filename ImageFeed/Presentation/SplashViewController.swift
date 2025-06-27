@@ -1,19 +1,43 @@
 import UIKit
 
-final class SplashViewController: UIViewController {
+
+final class SplashViewController: UIViewController, UINavigationControllerDelegate {
+    // MARK: - UI Elements
+    lazy var splashImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "vectorLaunchScreen")
+        return imageView
+    }()
+    
     // MARK: - Private Constants
-    private let storage = OAuth2TokenStorageImplementation()
     private let showAuthenticationScreenSegueIdentifier = "showAuthentication"
     
     // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        setupSplashImageView()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if storage.token != nil {
-            switchToTabBarController()
-        } else {
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+        guard let token = KeychainService.shared.getToken(for: "Auth token") else {
+            // Переход на AuthViewController
+            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            guard let navigationController = storyboard.instantiateViewController(withIdentifier: "UINavigationController") as? UINavigationController
+            else {
+                assertionFailure("❌ Не удалось загрузить AuthViewController из Storyboard")
+                return
+            }
+            navigationController.delegate = self
+            navigationController.modalPresentationStyle = .fullScreen
+            present(navigationController, animated: true)
+            return
         }
+        
+        // Токен успешно получен
+        fetchProfile(token)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,36 +64,53 @@ final class SplashViewController: UIViewController {
         // Установим в `rootViewController` полученный контроллер
         window.rootViewController = tabBarController
     }
-}
-
-// MARK: - Extension
-extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        // Проверим, что переходим на авторизацию
-        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-            
-            // Доберёмся до первого контроллера в навигации.
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers[0] as? AuthViewController
-            else {
-                assertionFailure("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
-                return
-            }
-            
-            // Установим делегатом контроллера наш SplashViewController
-            viewController.delegate = self
-            
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    
+    // MARK: - Setup Functions
+    private func setupUI() {
+        view.addSubviews(splashImageView)
+        view.backgroundColor = UIColor(named: "YP Black")
+    }
+    
+    private func setupSplashImageView() {
+        NSLayoutConstraint.activate([
+            splashImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            splashImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+        ])
     }
 }
 
 // MARK: - Extension
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
-        self.switchToTabBarController()
+        
+    }
+    
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        ProfileService.shared.fetchProfile(token) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self else { return }
+            
+            switch result {
+            case .success(let profile):
+                print("✅ Профиль получен в didAuthenticate: \(profile.username) ")
+                self.fetchProfileImageURL(username: profile.username)
+                self.switchToTabBarController()
+            case . failure(let error):
+                print("❌ Ошибка декодирования в fetchProfile: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func fetchProfileImageURL(username: String) {
+        ProfileImageService.shared.fetchProfileImageURL(username: username) { result in
+            
+            switch result {
+            case .success:
+                print("✅ Аватарка получена в fetchProfileImageURL в SplashViewController")
+            case . failure(let error):
+                print("❌ Ошибка декодирования в fetchProfileImageURL в SplashViewController: \(error.localizedDescription)")
+            }
+        }
     }
 }
