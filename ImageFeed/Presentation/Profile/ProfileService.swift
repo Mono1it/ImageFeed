@@ -5,7 +5,7 @@ final class ProfileService {
     static let shared = ProfileService()
     
     // MARK: - Private Variables
-    private let decoder = JSONDecoder()
+    //private let decoder = JSONDecoder()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private(set) var profile: Profile?

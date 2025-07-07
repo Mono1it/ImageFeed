@@ -1,6 +1,5 @@
 import UIKit
 
-
 final class SplashViewController: UIViewController, UINavigationControllerDelegate {
     // MARK: - UI Elements
     lazy var splashImageView: UIImageView = {
