@@ -8,21 +8,21 @@ struct UrlsResult: Codable {
 
 struct PhotoResult: Codable {
     let id: String
+    let createdAt: Date?
     let width: Int
     let height: Int
-    let createdAt: Date?
-    let description: String?
-    let imagesURL: UrlsResult
     let isLiked: Bool
+    let description: String?
+    let imageURL: UrlsResult
     
     private enum CodingKeys: String, CodingKey {
         case id
+        case createdAt = "created_at"
         case width
         case height
-        case createdAt = "created_at"
-        case description
-        case imagesURL = "urls"
         case isLiked = "liked_by_user"
+        case description
+        case imageURL = "urls"
     }
 }
 
@@ -88,8 +88,8 @@ class ImagesListService{
                         size: CGSize(width: response.width, height: response.height),
                         createdAt: response.createdAt,
                         welcomeDescription: response.description,
-                        thumbImageURL: response.imagesURL.thumb,
-                        largeImageURL: response.imagesURL.full,
+                        thumbImageURL: response.imageURL.thumb,
+                        largeImageURL: response.imageURL.full,
                         isLiked: response.isLiked
                     )
                     self.photos.append(photo)
