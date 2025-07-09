@@ -35,13 +35,11 @@ final class SingleImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        scrollView.delegate = self
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 2
         
-        if let image = image {
-            imageView.image = image
-            rescaleAndCenterImage(image: image)
-        } else if let url = imageURL {
+        if let url = imageURL {
             imageView.kf.setImage(with: url,
                                   placeholder: UIImage(resource: .imagePlaceholder),
                                   options: nil
@@ -59,17 +57,21 @@ final class SingleImageViewController: UIViewController {
     
     // MARK: - Private Methods
     private func rescaleAndCenterImage(image: UIImage) {
+        imageView.image = image
+        imageView.sizeToFit()
         let imageSize = image.size
-        let visibleRectSize = scrollView.bounds.size
+        scrollView.contentSize = imageView.bounds.size
         
+        let visibleRectSize = scrollView.bounds.size
         let hScale = visibleRectSize.width / imageSize.width
         let vScale = visibleRectSize.height / imageSize.height
         let theoreticalScale = min(hScale, vScale)
         let Scale = min(scrollView.maximumZoomScale, max(scrollView.minimumZoomScale, theoreticalScale))
-        self.scrollView.setZoomScale(Scale, animated: false)
+        scrollView.setZoomScale(Scale, animated: false)
         scrollView.layoutIfNeeded()
         
         centerImage()
+
     }
     
     private func centerImage() {
