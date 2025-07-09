@@ -1,6 +1,9 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
+    // MARK: - Variables
+    var imageURL: URL?
+    
     // MARK: - Public Properties
     var image: UIImage? {
         didSet{
@@ -31,11 +34,27 @@ final class SingleImageViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let image = image else {return}
-        imageView.image = image
-        rescaleAndCenterImage(image: image)
+        
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 2
+        
+        if let image = image {
+            imageView.image = image
+            rescaleAndCenterImage(image: image)
+        } else if let url = imageURL {
+            imageView.kf.setImage(with: url,
+                                  placeholder: UIImage(resource: .imagePlaceholder),
+                                  options: nil
+            ) { [weak self] result in
+                switch result {
+                case .success(let value):
+                    self?.image = value.image
+                    self?.rescaleAndCenterImage(image: value.image)
+                case .failure(let error):
+                    print("❌ Ошибка загрузки изображения: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     // MARK: - Private Methods

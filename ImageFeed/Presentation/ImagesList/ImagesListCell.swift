@@ -14,6 +14,12 @@ final class ImagesListCell: UITableViewCell {
     private var gradientLayer: CAGradientLayer?
     
     // MARK: - Overrides Methods
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImageView.kf.cancelDownloadTask()
+        cellImageView.image = nil
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
