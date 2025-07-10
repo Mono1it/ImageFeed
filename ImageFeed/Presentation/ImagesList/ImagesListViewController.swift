@@ -86,9 +86,9 @@ final class ImagesListViewController: UIViewController {
         let dateString = dateFormatter.string(from: photo.createdAt ?? Date())
         cell.dateLabelView.text = dateString
         
-        // Установка лайка
-        let likeImageName = indexPath.row.isEven ? "Active" : "No Active"
-        cell.likeButtonView.imageView?.image = UIImage(named: likeImageName)
+        // Установка лайков
+        let isLike = photo.isLiked ? UIImage(resource: .active) : UIImage(resource: .noActive)
+        cell.likeButtonView.imageView?.image = isLike
     }
     
     // Анимированное обновление таблицы
@@ -121,7 +121,9 @@ extension ImagesListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
+        imagesListCell.delegate = self
         configCell(for: imagesListCell, with: indexPath)
+        
         return imagesListCell
     }
     
@@ -166,3 +168,45 @@ extension Int {
         !isEven
     }
 }
+
+extension ImagesListViewController: LikeButtonDelegate {
+    func didLikeButtonTouch(in cell: ImagesListCell) {
+        // Поиск индекса элемента
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        // Текущий элемент
+        let photo = photos[indexPath.row]
+        let newValue = !photo.isLiked
+        
+        // Обновляем UI кнопки
+        cell.setLike(isLike: newValue)
+        UIBlockingProgressHUD.show()
+        
+        ImagesListService.shared.changeLike(photoId: photo.id, isLike: newValue) { [weak self] result in
+            guard let self else { return }
+            
+            switch result {
+            case .success:
+                self.photos[indexPath.row] = Photo(
+                    id: photo.id,
+                    size: photo.size,
+                    createdAt: photo.createdAt,
+                    welcomeDescription: photo.welcomeDescription,
+                    thumbImageURL: photo.thumbImageURL,
+                    largeImageURL: photo.largeImageURL,
+                    isLiked: newValue
+                )
+                // Обновляем список фотографий в сервисе, чтобы при прокрутке вниз списка лайки не исчезали сверху
+                ImagesListService.shared.updateLikeStatus(photoId: photo.id, isLiked: newValue)
+                UIBlockingProgressHUD.dismiss()
+                print("✅ Поставлен лайк/дизлайк фото с id: \(photo.id)")
+            case .failure(let error):
+                print("❌ Не удалось изменить лайк: \(error)")
+                UIBlockingProgressHUD.dismiss()
+                DispatchQueue.main.async {
+                    cell.setLike(isLike: photo.isLiked)
+                }
+            }
+        }
+    }
+}
+

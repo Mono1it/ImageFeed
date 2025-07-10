@@ -1,5 +1,9 @@
 import UIKit
 
+protocol LikeButtonDelegate: AnyObject {
+    func didLikeButtonTouch(in cell: ImagesListCell)
+}
+
 final class ImagesListCell: UITableViewCell {
     // MARK: - IB Outlets
     @IBOutlet weak var gradientView: UIView!
@@ -9,6 +13,7 @@ final class ImagesListCell: UITableViewCell {
     
     // MARK: - Public Properties
     static let reuseIdentifier = "ImagesListCell"
+    weak var delegate: LikeButtonDelegate?
     
     // MARK: - Private Properties
     private var gradientLayer: CAGradientLayer?
@@ -38,5 +43,16 @@ final class ImagesListCell: UITableViewCell {
         // Добавляем
         gradientView.layer.insertSublayer(gradient, at: 0)
         gradientLayer = gradient
+    }
+    
+    // MARK: - IBActions
+    @IBAction func didLikeButtonTouch(_ sender: Any) {
+        delegate?.didLikeButtonTouch(in: self)
+    }
+    
+    func setLike(isLike: Bool) {
+        // Установка лайка
+        let image = isLike ? UIImage(resource: .active) : UIImage(resource: .noActive)
+        likeButtonView.setImage(image, for: .normal)
     }
 }
