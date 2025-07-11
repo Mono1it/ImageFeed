@@ -152,10 +152,6 @@ final class ProfileViewController: UIViewController {
                                       message: "Уверены что хотите выйти?",
                                       preferredStyle: .alert)
         
-        let noAction = UIAlertAction(title: "Нет", style: .cancel) { _ in
-            alert.dismiss(animated: true, completion: {})
-        }
-        
         let YesAction = UIAlertAction(title: "Да", style: .default) { _ in
             ProfileLogoutService.shared.logout()
             guard let window = UIApplication.shared.windows.first else { return }
@@ -164,8 +160,12 @@ final class ProfileViewController: UIViewController {
             print("🚪 Выход")
         }
         
-        alert.addAction(noAction)
+        let noAction = UIAlertAction(title: "Нет", style: .cancel) { _ in
+            alert.dismiss(animated: true, completion: {})
+        }
+        
         alert.addAction(YesAction)
+        alert.addAction(noAction)
         
         present(alert, animated: true, completion: {})
     }

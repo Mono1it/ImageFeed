@@ -121,8 +121,8 @@ extension SingleImageViewController: UIScrollViewDelegate {
             self.setupImage(imageView: self.imageView, url: url)
         }
         
-        alert.addAction(noAction)
         alert.addAction(YesAction)
+        alert.addAction(noAction)
         
         present(alert, animated: true, completion: {})
     }
