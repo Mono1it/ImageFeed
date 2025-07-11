@@ -105,5 +105,9 @@ final class ProfileService {
         print("🚀 Запускаем новый task: \(request.url?.absoluteString ?? "нет URL")")
         task.resume()
     }
+
+    func clearProfile() {
+        self.profile = nil
+    }
 }
 

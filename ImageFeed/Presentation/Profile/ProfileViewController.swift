@@ -82,6 +82,7 @@ final class ProfileViewController: UIViewController {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL) else {
+            profileImageView.image = UIImage(resource: .emptyProfile)
             print("❌ Некорректный URL")
             return
         }
@@ -146,7 +147,27 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func didTapExitButton() {
-        print("🚪 Выход")
+        //  создаём модель alert
+        let alert = UIAlertController(title: "Пока, пока!",
+                                      message: "Уверены что хотите выйти?",
+                                      preferredStyle: .alert)
+        
+        let noAction = UIAlertAction(title: "Нет", style: .cancel) { _ in
+            alert.dismiss(animated: true, completion: {})
+        }
+        
+        let YesAction = UIAlertAction(title: "Да", style: .default) { _ in
+            ProfileLogoutService.shared.logout()
+            guard let window = UIApplication.shared.windows.first else { return }
+            let splashVC = SplashViewController()
+            window.rootViewController = splashVC
+            print("🚪 Выход")
+        }
+        
+        alert.addAction(noAction)
+        alert.addAction(YesAction)
+        
+        present(alert, animated: true, completion: {})
     }
 }
 

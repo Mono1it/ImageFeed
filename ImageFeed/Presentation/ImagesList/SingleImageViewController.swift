@@ -1,10 +1,8 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
-    // MARK: - Variables
-    var imageURL: URL?
-    
     // MARK: - Public Properties
+    var imageURL: URL?
     var image: UIImage? {
         didSet{
             guard isViewLoaded else { return }
@@ -23,7 +21,7 @@ final class SingleImageViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     @IBAction func didTapShareButton(_ sender: Any) {
-        guard let image else {
+        guard let image = imageView.image else {
             print("⚠️ Нет изображения для шаринга")
             return
         }
@@ -40,37 +38,29 @@ final class SingleImageViewController: UIViewController {
         scrollView.maximumZoomScale = 2
         
         if let url = imageURL {
-            imageView.kf.setImage(with: url,
-                                  placeholder: UIImage(resource: .imagePlaceholder),
-                                  options: nil
-            ) { [weak self] result in
-                switch result {
-                case .success(let value):
-                    self?.image = value.image
-                    self?.rescaleAndCenterImage(image: value.image)
-                case .failure(let error):
-                    print("❌ Ошибка загрузки изображения: \(error.localizedDescription)")
-                }
-            }
+            setupImage(imageView: imageView, url: url)
         }
     }
     
     // MARK: - Private Methods
     private func rescaleAndCenterImage(image: UIImage) {
+        // Устанавливаем изображение и размер
         imageView.image = image
         imageView.sizeToFit()
         scrollView.contentSize = imageView.bounds.size
         
-        let visibleRectSize = scrollView.bounds.size
+        let scrollViewSize = scrollView.bounds.size
         let imageSize = imageView.bounds.size
-        let hScale = visibleRectSize.width / imageSize.width
-        let vScale = visibleRectSize.height / imageSize.height
-        let minScale = min(hScale, vScale)
-        scrollView.setZoomScale(minScale, animated: false)
+        let widthScale = scrollViewSize.width / imageSize.width
+        let heightScale = scrollViewSize.height / imageSize.height
+        let minScale = min(widthScale, heightScale)
+        
         scrollView.minimumZoomScale = minScale
+        scrollView.maximumZoomScale = 3.0
+        scrollView.zoomScale = minScale
         
         centerImage()
-
+        
     }
     
     private func centerImage() {
@@ -98,6 +88,43 @@ extension SingleImageViewController: UIScrollViewDelegate {
     // MARK: - Public methods
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         centerImage()
+    }
+    
+    func setupImage(imageView: UIImageView, url: URL) {
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: url) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                self.rescaleAndCenterImage(image: imageResult.image)
+            case .failure:
+                self.showError()
+            }
+        }
+    }
+    
+    func showError() {
+        //  создаём модель alert
+        let alert = UIAlertController(title: "Что-то пошло не так",
+                                      message: "Попробовать ещё раз?",
+                                      preferredStyle: .alert)
+        
+        let noAction = UIAlertAction(title: "Не надо", style: .default) { _ in
+            alert.dismiss(animated: true, completion: {})
+        }
+        
+        let YesAction = UIAlertAction(title: "Повторить", style: .default) {[weak self] _ in
+            guard let self else { return }
+            guard let url = self.imageURL  else { return }
+            self.setupImage(imageView: self.imageView, url: url)
+        }
+        
+        alert.addAction(noAction)
+        alert.addAction(YesAction)
+        
+        present(alert, animated: true, completion: {})
     }
 }
 

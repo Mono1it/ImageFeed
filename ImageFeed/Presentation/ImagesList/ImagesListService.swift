@@ -232,4 +232,9 @@ class ImagesListService{
             photos[index] = updated
         }
     }
+    
+    func clearPhotos() {
+        self.photos = []
+        self.lastLoadedPage = nil
+    }
 }
