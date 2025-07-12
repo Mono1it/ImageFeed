@@ -16,7 +16,7 @@ final class ProfileService {
     struct ProfileResult: Codable {
         let username: String
         let firstName: String
-        let lastName: String
+        let lastName: String?
         let bio: String?
         
         enum CodingKeys: String, CodingKey {
@@ -35,7 +35,7 @@ final class ProfileService {
         
         init(profileResult: ProfileService.ProfileResult) {
             self.username = profileResult.username
-            self.name = "\(profileResult.firstName) \(profileResult.lastName)"
+            self.name = "\(profileResult.firstName) \(profileResult.lastName ?? "")"
             self.loginName = "@\(profileResult.username)"
             self.bio = profileResult.bio ?? ""
         }
