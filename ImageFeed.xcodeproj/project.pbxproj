@@ -17,6 +17,9 @@
 		094AEE552E0AD8B30096CD4F /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094AEE542E0AD8B30096CD4F /* TabBarController.swift */; };
 		094AEE632E0EEC610096CD4F /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094AEE622E0EEC610096CD4F /* KeychainService.swift */; };
 		095C66442E2192FB003EA291 /* ProfileLogoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095C66432E2192FB003EA291 /* ProfileLogoutService.swift */; };
+		095C66462E228C73003EA291 /* PhotoResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095C66452E228C73003EA291 /* PhotoResultModel.swift */; };
+		095C66482E228CC2003EA291 /* LikePhotoResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095C66472E228CC2003EA291 /* LikePhotoResultModel.swift */; };
+		095C664A2E228CF3003EA291 /* PhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095C66492E228CF3003EA291 /* PhotoModel.swift */; };
 		096B973E2DEDB12300CBF97C /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B973D2DEDB12300CBF97C /* OAuth2Service.swift */; };
 		096B97402DEDBE5A00CBF97C /* URLSession+data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B973F2DEDBE5A00CBF97C /* URLSession+data.swift */; };
 		096B97422DEEFB1F00CBF97C /* OAuthTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B97412DEEFB1F00CBF97C /* OAuthTokenResponse.swift */; };
@@ -71,6 +74,9 @@
 		094AEE542E0AD8B30096CD4F /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		094AEE622E0EEC610096CD4F /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		095C66432E2192FB003EA291 /* ProfileLogoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLogoutService.swift; sourceTree = "<group>"; };
+		095C66452E228C73003EA291 /* PhotoResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResultModel.swift; sourceTree = "<group>"; };
+		095C66472E228CC2003EA291 /* LikePhotoResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePhotoResultModel.swift; sourceTree = "<group>"; };
+		095C66492E228CF3003EA291 /* PhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModel.swift; sourceTree = "<group>"; };
 		096B973D2DEDB12300CBF97C /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		096B973F2DEDBE5A00CBF97C /* URLSession+data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+data.swift"; sourceTree = "<group>"; };
 		096B97412DEEFB1F00CBF97C /* OAuthTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponse.swift; sourceTree = "<group>"; };
@@ -271,6 +277,9 @@
 				09CFBADF2DBFA6D4008338DF /* ImagesListViewController.swift */,
 				09CFBB3C2DCFA7A8008338DF /* ImagesListCell.swift */,
 				09D536A12DD3487400D958FA /* SingleImageViewController.swift */,
+				095C66452E228C73003EA291 /* PhotoResultModel.swift */,
+				095C66472E228CC2003EA291 /* LikePhotoResultModel.swift */,
+				095C66492E228CF3003EA291 /* PhotoModel.swift */,
 			);
 			path = ImagesList;
 			sourceTree = "<group>";
@@ -388,8 +397,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				098A79D62E1C06250081CFF1 /* ImagesListService.swift in Sources */,
+				095C66462E228C73003EA291 /* PhotoResultModel.swift in Sources */,
 				09CFBAE02DBFA6D4008338DF /* ImagesListViewController.swift in Sources */,
 				09CFBB3D2DCFA7A8008338DF /* ImagesListCell.swift in Sources */,
+				095C664A2E228CF3003EA291 /* PhotoModel.swift in Sources */,
 				0907C5292DD23E6600DAB97E /* ProfileViewController.swift in Sources */,
 				09A160682DFF312500190764 /* UIBlockingProgressHUD.swift in Sources */,
 				09CFBADC2DBFA6D4008338DF /* AppDelegate.swift in Sources */,
@@ -406,6 +417,7 @@
 				096B97492DF1D48700CBF97C /* SplashViewController.swift in Sources */,
 				096B97402DEDBE5A00CBF97C /* URLSession+data.swift in Sources */,
 				093F4E6F2DE9AED300924668 /* WebViewViewController.swift in Sources */,
+				095C66482E228CC2003EA291 /* LikePhotoResultModel.swift in Sources */,
 				096B973E2DEDB12300CBF97C /* OAuth2Service.swift in Sources */,
 				09A1606F2E0746CB00190764 /* AlertPresenter.swift in Sources */,
 				09A1606C2E0074D300190764 /* ProfileImageService.swift in Sources */,

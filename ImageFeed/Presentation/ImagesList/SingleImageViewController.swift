@@ -111,17 +111,17 @@ extension SingleImageViewController: UIScrollViewDelegate {
                                       message: "Попробовать ещё раз?",
                                       preferredStyle: .alert)
         
-        let noAction = UIAlertAction(title: "Не надо", style: .default) { _ in
-            alert.dismiss(animated: true, completion: {})
-        }
-        
-        let YesAction = UIAlertAction(title: "Повторить", style: .default) {[weak self] _ in
+        let yesAction = UIAlertAction(title: "Повторить", style: .default) {[weak self] _ in
             guard let self else { return }
             guard let url = self.imageURL  else { return }
             self.setupImage(imageView: self.imageView, url: url)
         }
         
-        alert.addAction(YesAction)
+        let noAction = UIAlertAction(title: "Не надо", style: .default) { _ in
+            alert.dismiss(animated: true, completion: {})
+        }
+        
+        alert.addAction(yesAction)
         alert.addAction(noAction)
         
         present(alert, animated: true, completion: {})

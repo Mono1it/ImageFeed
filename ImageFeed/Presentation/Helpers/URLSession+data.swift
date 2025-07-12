@@ -13,8 +13,13 @@ extension URLSession {
         for request: URLRequest,
         completion: @escaping (Result<T, Error>) -> Void
     ) -> URLSessionTask {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
+        
+        lazy var decoder: JSONDecoder = {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            return decoder
+        }()
+        
         let task = data(for: request) { (result: Result<Data, Error>) in
             DispatchQueue.main.async {
                 

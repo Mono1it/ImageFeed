@@ -1,46 +1,6 @@
 import Foundation
 
-//MARK: - Structs
-struct UrlsResult: Codable {
-    let thumb: String
-    let full: String
-}
-
-struct PhotoResult: Codable {
-    let id: String
-    let createdAt: Date?
-    let width: Int
-    let height: Int
-    let isLiked: Bool
-    let description: String?
-    let imageURL: UrlsResult
-    
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case createdAt = "created_at"
-        case width
-        case height
-        case isLiked = "liked_by_user"
-        case description
-        case imageURL = "urls"
-    }
-}
-
-struct LikePhotoResult: Decodable {
-    let photo: PhotoResult
-}
-
-struct Photo {
-    let id: String
-    let size: CGSize
-    let createdAt: Date?
-    let welcomeDescription: String?
-    let thumbImageURL: String
-    let largeImageURL: String
-    let isLiked: Bool
-}
-
-class ImagesListService{
+final class ImagesListService{
     // MARK: - Singleton
     static let shared = ImagesListService()
     
@@ -50,7 +10,7 @@ class ImagesListService{
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     private var isFetching = false
-    
+    private let imagesPerPage = "10"
     // MARK: - Notification
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
@@ -60,7 +20,6 @@ class ImagesListService{
     //MARK: - Methods
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
-        print("🛑 Отменяем предыдущий task: \(task != nil ? "Да" : "Нет")")
         task?.cancel()
         
         guard !isFetching else { return }
@@ -78,7 +37,6 @@ class ImagesListService{
         }
         
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
-            print("📡 objectTask создан: \(request.url?.absoluteString ?? "нет URL")")
             guard let self else {
                 preconditionFailure("❌ UrlSessionError")
             }
@@ -129,7 +87,7 @@ class ImagesListService{
     }
     
     func makeImageListRequest(page: Int) -> URLRequest? {
-        let imagePerPage: String = "10" //  Оптимальное число загружаемых фотографий за один вызов.
+        let imagePerPage: String = imagesPerPage //  Оптимальное число загружаемых фотографий за один вызов.
         
         var components = URLComponents()
         components.scheme = "https"
@@ -203,11 +161,7 @@ class ImagesListService{
         
         var request = URLRequest(url: url)
         
-        if isLike {
-            request.httpMethod = HTTPMethod.post.rawValue
-        } else {
-            request.httpMethod = HTTPMethod.delete.rawValue
-        }
+        request.httpMethod = isLike ? HTTPMethod.post.rawValue : HTTPMethod.delete.rawValue
         
         let token: String? = KeychainService.shared.getToken(for: "Auth token")
         guard let token = token else {
