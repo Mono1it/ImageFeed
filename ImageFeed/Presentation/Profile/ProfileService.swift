@@ -5,7 +5,6 @@ final class ProfileService {
     static let shared = ProfileService()
     
     // MARK: - Private Variables
-    private let decoder = JSONDecoder()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private(set) var profile: Profile?
@@ -17,7 +16,7 @@ final class ProfileService {
     struct ProfileResult: Codable {
         let username: String
         let firstName: String
-        let lastName: String
+        let lastName: String?
         let bio: String?
         
         enum CodingKeys: String, CodingKey {
@@ -36,7 +35,7 @@ final class ProfileService {
         
         init(profileResult: ProfileService.ProfileResult) {
             self.username = profileResult.username
-            self.name = "\(profileResult.firstName) \(profileResult.lastName)"
+            self.name = "\(profileResult.firstName) \(profileResult.lastName ?? "")"
             self.loginName = "@\(profileResult.username)"
             self.bio = profileResult.bio ?? ""
         }
@@ -104,6 +103,10 @@ final class ProfileService {
         self.task = task
         print("🚀 Запускаем новый task: \(request.url?.absoluteString ?? "нет URL")")
         task.resume()
+    }
+
+    func clearProfile() {
+        self.profile = nil
     }
 }
 
