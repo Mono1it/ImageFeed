@@ -30,6 +30,9 @@ final class AuthViewController: UIViewController {
                 assertionFailure("❌ Failed to prepare for \(SegueIdentifier.showWebView)")
                 return
             }
+            let webViewPresenter = WebViewPresenter()
+            webViewVC.presenter = webViewPresenter
+            webViewPresenter.view = webViewVC
             webViewVC.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
