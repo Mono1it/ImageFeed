@@ -1,8 +1,6 @@
 import UIKit
 import WebKit
 
-
-
 protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
@@ -19,8 +17,8 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     var presenter: WebViewPresenterProtocol?
     
     // MARK: - Private Constants
-    
     private var estimatedProgressObservation: NSKeyValueObservation?
+    
     // MARK: - Delegate
     weak var delegate: WebViewViewControllerDelegate?
     
