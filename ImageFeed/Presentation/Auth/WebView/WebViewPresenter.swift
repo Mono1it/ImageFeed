@@ -39,23 +39,7 @@ final class WebViewPresenter: WebViewPresenterProtocol {
         }
     
     // MARK: - Private Methods
-//    private func loadWebView() {
-//        var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString)
-//        urlComponents?.queryItems = [
-//            URLQueryItem(name: "client_id", value: Constants.accessKey),
-//            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-//            URLQueryItem(name: "response_type", value: "code"),
-//            URLQueryItem(name: "scope", value: Constants.accessScope)
-//        ]
-//        
-//        if let url = urlComponents?.url {
-//            let request = URLRequest(url: url)
-//            didUpdateProgressValue(0)
-//            view?.load(request: request)
-//        }
-//    }
-    
-    private func shouldHideProgress(for value: Float) -> Bool {
+    func shouldHideProgress(for value: Float) -> Bool {
         abs(value - 1.0) <= accuracyThreshold
     }
 }

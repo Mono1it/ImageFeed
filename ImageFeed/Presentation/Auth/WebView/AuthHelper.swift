@@ -6,12 +6,14 @@ protocol AuthHelperProtocol {
 }
 
 final class AuthHelper: AuthHelperProtocol {
+    // MARK: - Constants
     let configuration: AuthConfiguration
 
     init(configuration: AuthConfiguration = .standard) {
         self.configuration = configuration
     }
     
+    // MARK: - Methods
     func authRequest() -> URLRequest? {
         guard let url = authURL() else { return nil }
         
@@ -25,7 +27,6 @@ final class AuthHelper: AuthHelperProtocol {
             assertionFailure("Invalid authorization URL string: \(configuration.authURLString)")
             return nil
         }
-        
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: configuration.accessKey),
             URLQueryItem(name: "redirect_uri", value: configuration.redirectURI),
