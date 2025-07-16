@@ -17,6 +17,9 @@
 		094318832E26C19C00F4D094 /* WebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094318822E26C19C00F4D094 /* WebViewTests.swift */; };
 		0943188A2E26C32700F4D094 /* WebViewPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094318892E26C32700F4D094 /* WebViewPresenterSpy.swift */; };
 		0943188C2E26C65800F4D094 /* WebViewViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0943188B2E26C65800F4D094 /* WebViewViewControllerSpy.swift */; };
+		0943188E2E26D26800F4D094 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0943188D2E26D26800F4D094 /* ProfilePresenter.swift */; };
+		094318902E27DEE000F4D094 /* ProfileServiceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0943188F2E27DEE000F4D094 /* ProfileServiceModel.swift */; };
+		094318922E27E07300F4D094 /* ProfileImageServiceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094318912E27E07300F4D094 /* ProfileImageServiceModel.swift */; };
 		094AEE502E099B220096CD4F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 094AEE4F2E099B220096CD4F /* Kingfisher */; };
 		094AEE532E09C0E30096CD4F /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 094AEE522E09C0E30096CD4F /* SwiftKeychainWrapper */; };
 		094AEE552E0AD8B30096CD4F /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094AEE542E0AD8B30096CD4F /* TabBarController.swift */; };
@@ -92,6 +95,9 @@
 		094318822E26C19C00F4D094 /* WebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewTests.swift; sourceTree = "<group>"; };
 		094318892E26C32700F4D094 /* WebViewPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewPresenterSpy.swift; sourceTree = "<group>"; };
 		0943188B2E26C65800F4D094 /* WebViewViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewControllerSpy.swift; sourceTree = "<group>"; };
+		0943188D2E26D26800F4D094 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
+		0943188F2E27DEE000F4D094 /* ProfileServiceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServiceModel.swift; sourceTree = "<group>"; };
+		094318912E27E07300F4D094 /* ProfileImageServiceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageServiceModel.swift; sourceTree = "<group>"; };
 		094AEE542E0AD8B30096CD4F /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		094AEE622E0EEC610096CD4F /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		095C66432E2192FB003EA291 /* ProfileLogoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLogoutService.swift; sourceTree = "<group>"; };
@@ -338,9 +344,12 @@
 			isa = PBXGroup;
 			children = (
 				09A160692DFF739300190764 /* ProfileService.swift */,
+				0943188F2E27DEE000F4D094 /* ProfileServiceModel.swift */,
 				09A1606B2E0074D300190764 /* ProfileImageService.swift */,
+				094318912E27E07300F4D094 /* ProfileImageServiceModel.swift */,
 				0907C5282DD23E6600DAB97E /* ProfileViewController.swift */,
 				095C66432E2192FB003EA291 /* ProfileLogoutService.swift */,
+				0943188D2E26D26800F4D094 /* ProfilePresenter.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -512,11 +521,14 @@
 				096B973E2DEDB12300CBF97C /* OAuth2Service.swift in Sources */,
 				09A1606F2E0746CB00190764 /* AlertPresenter.swift in Sources */,
 				09A1606C2E0074D300190764 /* ProfileImageService.swift in Sources */,
+				0943188E2E26D26800F4D094 /* ProfilePresenter.swift in Sources */,
 				096B97442DEF020600CBF97C /* OAuth2TokenStorageImplementation.swift in Sources */,
 				09A160732E07470100190764 /* AlertPresenterProtocol.swift in Sources */,
 				09A160752E07472600190764 /* AlertPresenterDelegate.swift in Sources */,
+				094318902E27DEE000F4D094 /* ProfileServiceModel.swift in Sources */,
 				0943187B2E2582AB00F4D094 /* AuthHelper.swift in Sources */,
 				09CFBADE2DBFA6D4008338DF /* SceneDelegate.swift in Sources */,
+				094318922E27E07300F4D094 /* ProfileImageServiceModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

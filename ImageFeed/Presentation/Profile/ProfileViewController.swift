@@ -1,18 +1,30 @@
 import UIKit
-import ProgressHUD
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateProfileDetails(name: String, loginName: String, bio: String)
+    func showLogoutAlert()
+    func updateProfileAvatar(with url: URL)
+    func showSplashScreen()
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
+    var presenter: ProfilePresenterProtocol?
     
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        presenter.view = self
+    }
+    
+    //MARK: - Mock Data
     private var userName = "Екатерина Новикова"
     private var userLogin = "@ekaterina_nov"
     private var userDiscription = "Hello, world!"
-    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - UI Elements
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        //label.text = userName     //  Убрал мок данные
         label.textColor = UIColor(resource: .ypWhite)
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         return label
@@ -20,7 +32,6 @@ final class ProfileViewController: UIViewController {
     
     lazy var nickNameLabel: UILabel = {
         let label = UILabel()
-        //label.text = userLogin    //  Убрал мок данные
         label.textColor = UIColor(resource: .ypGray)
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
@@ -28,7 +39,6 @@ final class ProfileViewController: UIViewController {
     
     lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        //label.text = userDiscription  //  Убрал мок данные
         label.textColor = UIColor(resource: .ypWhite)
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
@@ -55,20 +65,8 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let profile = ProfileService.shared.profile {
-            updateProfileDetails(with: profile)
-        }
-        
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self else { return }
-            self.updateProfileAvatar()
-        }
-        
-        updateProfileAvatar()
+        presenter?.viewDidLoad()
+
         setupUI()
         setupProfileImageView()
         setupNameLabel()
@@ -77,16 +75,19 @@ final class ProfileViewController: UIViewController {
         setupExitButton()
     }
     
-    // MARK: - Setup Functions
-    private func updateProfileAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL) else {
-            profileImageView.image = UIImage(resource: .emptyProfile)
-            print("❌ Некорректный URL")
-            return
-        }
-        print("✅ Аватарка получена в updateProfileAvatar: \(url)")
+    // MARK: - Actions
+    @objc private func didTapExitButton() {
+        presenter?.didTapLogout()
+    }
+
+    // MARK: - Methods
+    func updateProfileDetails(name: String, loginName: String, bio: String) {
+        nameLabel.text = name
+        nickNameLabel.text = loginName
+        descriptionLabel.text = bio
+    }
+    
+    func updateProfileAvatar(with url: URL) {
         let processor = RoundCornerImageProcessor(cornerRadius: 35)
         profileImageView.kf.indicatorType = .activity
         let imageUrl = url
@@ -95,12 +96,33 @@ final class ProfileViewController: UIViewController {
                                      options: [.processor(processor)])
     }
     
-    private func updateProfileDetails(with profile: ProfileService.Profile) {
-        nameLabel.text = profile.name
-        nickNameLabel.text = profile.loginName
-        descriptionLabel.text = profile.bio
+    func showLogoutAlert() {
+        //  создаём модель alert
+        let alert = UIAlertController(title: "Пока, пока!",
+                                      message: "Уверены что хотите выйти?",
+                                      preferredStyle: .alert)
+        let yesAction = UIAlertAction(title: "Да", style: .default) { _ in
+            self.presenter?.confirmLogout()
+        }
+        
+        let noAction = UIAlertAction(title: "Нет", style: .cancel) { _ in
+            alert.dismiss(animated: true, completion: {})
+        }
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        present(alert, animated: true, completion: {})
     }
     
+    func showSplashScreen() {
+        guard let window = UIApplication.shared.windows.first else { return }
+        let splashVC = SplashViewController()
+        window.rootViewController = splashVC
+        print("🚪 Выход")
+    }
+    
+    // MARK: - Setup Functions
     private func setupUI() {
         view.addSubviews(profileImageView, nameLabel, nickNameLabel, descriptionLabel, exitButton)
         view.backgroundColor = UIColor(resource: .ypBlack)
@@ -144,33 +166,7 @@ final class ProfileViewController: UIViewController {
             exitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ])
     }
-    
-    // MARK: - Actions
-    @objc private func didTapExitButton() {
-        //  создаём модель alert
-        let alert = UIAlertController(title: "Пока, пока!",
-                                      message: "Уверены что хотите выйти?",
-                                      preferredStyle: .alert)
-        
-        let yesAction = UIAlertAction(title: "Да", style: .default) { _ in
-            ProfileLogoutService.shared.logout()
-            guard let window = UIApplication.shared.windows.first else { return }
-            let splashVC = SplashViewController()
-            window.rootViewController = splashVC
-            print("🚪 Выход")
-        }
-        
-        let noAction = UIAlertAction(title: "Нет", style: .cancel) { _ in
-            alert.dismiss(animated: true, completion: {})
-        }
-        
-        alert.addAction(yesAction)
-        alert.addAction(noAction)
-        
-        present(alert, animated: true, completion: {})
-    }
 }
-
 // MARK: - Extensions
 extension UIView {
     func addSubviews(_ views: UIView...) {
