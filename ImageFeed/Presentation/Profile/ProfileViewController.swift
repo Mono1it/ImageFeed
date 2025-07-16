@@ -1,7 +1,7 @@
 import UIKit
 import Kingfisher
 
-protocol ProfileViewControllerProtocol: AnyObject {
+public protocol ProfileViewControllerProtocol: AnyObject {
     var presenter: ProfilePresenterProtocol? { get set }
     func updateProfileDetails(name: String, loginName: String, bio: String)
     func showLogoutAlert()
@@ -76,7 +76,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     }
     
     // MARK: - Actions
-    @objc private func didTapExitButton() {
+    @objc func didTapExitButton() {
         presenter?.didTapLogout()
     }
 

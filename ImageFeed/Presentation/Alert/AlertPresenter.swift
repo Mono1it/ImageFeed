@@ -2,7 +2,7 @@ import UIKit
 
 final class AlertPresenter: AlertPresenterProtocol {
     
-    weak var viewController: (UIViewController&AlertPresenterDelegate)?
+    weak var viewController: (UIViewController & AlertPresenterDelegate)?
     
     init(viewController: (UIViewController & AlertPresenterDelegate)? = nil) {
         self.viewController = viewController
