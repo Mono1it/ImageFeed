@@ -119,6 +119,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         guard let window = UIApplication.shared.windows.first else { return }
         let splashVC = SplashViewController()
         window.rootViewController = splashVC
+        print(String("Current View Controller: \(window.rootViewController)"))
         print("🚪 Выход")
     }
     

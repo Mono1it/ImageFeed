@@ -2,6 +2,7 @@ import XCTest
 @testable import ImageFeed
 
 final class ProfileViewTests: XCTestCase {
+    // MARK: - Tests
     func testProfileViewControllerCallsViewDidLoad() {
         //given
         let profileViewController = ProfileViewController()
@@ -90,7 +91,7 @@ final class ProfileViewTests: XCTestCase {
         let profileViewController = ProfileViewController()
         let profilePresenter = ProfilePresenterSpy()
         profileViewController.configure(profilePresenter)
-        let window = UIWindow()
+        guard let window = UIApplication.shared.windows.first else { return }
         window.rootViewController = profileViewController
         window.makeKeyAndVisible()
         
@@ -100,7 +101,7 @@ final class ProfileViewTests: XCTestCase {
         //then
         let expectation = XCTestExpectation(description: "Wait for rootController changed")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            XCTAssertTrue(window.rootViewController is SplashViewController)
+            XCTAssertTrue(window.rootViewController is SplashViewController, "Expected SplashViewController, got \(String(describing: window.rootViewController))")
             expectation.fulfill()
         }
         
