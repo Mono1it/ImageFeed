@@ -88,7 +88,10 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     }
     
     func cellDidDisplay(at indexPath: IndexPath) {
-        if indexPath.row == photos.count - 1 {
+        // Проверяем, что приложение запущено в тестовом режиме
+        let testMode = ProcessInfo.processInfo.arguments.contains("testMode")
+        
+        if !testMode && indexPath.row + 1 == photos.count {
             imagesListService.fetchPhotosNextPage()
         }
     }

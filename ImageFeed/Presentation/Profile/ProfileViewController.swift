@@ -64,6 +64,10 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 🔓 Для UI тестов
+        nameLabel.accessibilityIdentifier = "profileName"
+        nickNameLabel.accessibilityIdentifier = "profileUsername"
+        exitButton.accessibilityIdentifier = "logoutButton"
         
         presenter?.viewDidLoad()
 

@@ -70,7 +70,7 @@ final class ImagesListViewTests: XCTestCase {
         imagesListViewController.setValue(tableView, forKey: "tableView")
         tableView.dataSource = imagesListViewController
         tableView.delegate = imagesListViewController
-
+        
         //when
         _ = imagesListViewController.view
         imagesListViewController.tableView(tableView, didSelectRowAt: IndexPath(row:0, section:0))
