@@ -16,12 +16,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         self.presenter = presenter
         presenter.view = self
     }
-    
-    //MARK: - Mock Data
-    private var userName = "Екатерина Новикова"
-    private var userLogin = "@ekaterina_nov"
-    private var userDiscription = "Hello, world!"
-    
+
     // MARK: - UI Elements
     lazy var nameLabel: UILabel = {
         let label = UILabel()

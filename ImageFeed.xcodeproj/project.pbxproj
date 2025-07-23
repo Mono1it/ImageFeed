@@ -38,8 +38,6 @@
 		096B973E2DEDB12300CBF97C /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B973D2DEDB12300CBF97C /* OAuth2Service.swift */; };
 		096B97402DEDBE5A00CBF97C /* URLSession+data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B973F2DEDBE5A00CBF97C /* URLSession+data.swift */; };
 		096B97422DEEFB1F00CBF97C /* OAuthTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B97412DEEFB1F00CBF97C /* OAuthTokenResponse.swift */; };
-		096B97442DEF020600CBF97C /* OAuth2TokenStorageImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B97432DEF020600CBF97C /* OAuth2TokenStorageImplementation.swift */; };
-		096B97462DEF030B00CBF97C /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B97452DEF030B00CBF97C /* OAuth2TokenStorage.swift */; };
 		096B97492DF1D48700CBF97C /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096B97482DF1D48700CBF97C /* SplashViewController.swift */; };
 		098A79D62E1C06250081CFF1 /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098A79D52E1C06250081CFF1 /* ImagesListService.swift */; };
 		09A160662DFB12CB00190764 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 09A160652DFB12CB00190764 /* ProgressHUD */; };
@@ -129,8 +127,6 @@
 		096B973D2DEDB12300CBF97C /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		096B973F2DEDBE5A00CBF97C /* URLSession+data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+data.swift"; sourceTree = "<group>"; };
 		096B97412DEEFB1F00CBF97C /* OAuthTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponse.swift; sourceTree = "<group>"; };
-		096B97432DEF020600CBF97C /* OAuth2TokenStorageImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorageImplementation.swift; sourceTree = "<group>"; };
-		096B97452DEF030B00CBF97C /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		096B97482DF1D48700CBF97C /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		098A79D52E1C06250081CFF1 /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
 		09A160672DFF312500190764 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
@@ -205,8 +201,6 @@
 			isa = PBXGroup;
 			children = (
 				096B973D2DEDB12300CBF97C /* OAuth2Service.swift */,
-				096B97432DEF020600CBF97C /* OAuth2TokenStorageImplementation.swift */,
-				096B97452DEF030B00CBF97C /* OAuth2TokenStorage.swift */,
 				0908D5AB2DE879B5002CACFC /* AuthViewController.swift */,
 				094AEE622E0EEC610096CD4F /* KeychainService.swift */,
 				094318772E2575AF00F4D094 /* WebView */,
@@ -654,7 +648,6 @@
 				0908D5AC2DE879B5002CACFC /* AuthViewController.swift in Sources */,
 				09A1606A2DFF739300190764 /* ProfileService.swift in Sources */,
 				09A160712E0746E600190764 /* AlertModel.swift in Sources */,
-				096B97462DEF030B00CBF97C /* OAuth2TokenStorage.swift in Sources */,
 				0908D5A92DE5D313002CACFC /* AuthConfiguration.swift in Sources */,
 				09D536A22DD3487400D958FA /* SingleImageViewController.swift in Sources */,
 				095C66442E2192FB003EA291 /* ProfileLogoutService.swift in Sources */,
@@ -666,7 +659,6 @@
 				09A1606F2E0746CB00190764 /* AlertPresenter.swift in Sources */,
 				09A1606C2E0074D300190764 /* ProfileImageService.swift in Sources */,
 				0943188E2E26D26800F4D094 /* ProfilePresenter.swift in Sources */,
-				096B97442DEF020600CBF97C /* OAuth2TokenStorageImplementation.swift in Sources */,
 				09A160732E07470100190764 /* AlertPresenterProtocol.swift in Sources */,
 				09A160752E07472600190764 /* AlertPresenterDelegate.swift in Sources */,
 				094318902E27DEE000F4D094 /* ProfileServiceModel.swift in Sources */,

@@ -23,13 +23,13 @@ class Image_FeedUITests: XCTestCase {
         loginTextField.tap()
         loginTextField.typeText("login")
         webView.swipeUp()
-        webView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
+        webView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 5)).tap()
         
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         
         passwordTextField.tap()
-        sleep(3)
+        XCTAssertTrue(passwordTextField.waitForExistence(timeout: 3))
         passwordTextField.typeText("pass")
         webView.swipeUp()
         
@@ -44,29 +44,28 @@ class Image_FeedUITests: XCTestCase {
     func testFeed() throws {
         // тестируем сценарий ленты
         let tablesQuery = app.tables
-        sleep(2)
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
+        XCTAssertTrue(cell.waitForExistence(timeout: 2))
         cell.swipeUp()
         
-        sleep(3)
+        XCTAssertTrue(cell.waitForExistence(timeout: 3))
         
         let cellToLike = tablesQuery.children(matching: .cell).element(boundBy: 2)
         let likeButton = cellToLike.buttons["like button"]
         XCTAssertTrue(likeButton.waitForExistence(timeout: 5))
         let initialValue = likeButton.value as? String ?? "off"
         likeButton.tap()
-        sleep(2)
+        XCTAssertTrue(likeButton.waitForExistence(timeout: 2))
         let newValue = likeButton.value as? String ?? "off"
         XCTAssertNotEqual(initialValue, newValue, "Состояние лайка должно измениться")
         likeButton.tap()
         
-        sleep(2)
+        XCTAssertTrue(likeButton.waitForExistence(timeout: 2))
         
         cellToLike.tap()
         
-        sleep(2)
-        
         let image = app.scrollViews.images.element(boundBy: 0)
+        XCTAssertTrue(image.waitForExistence(timeout: 2))
         // Zoom in
         image.pinch(withScale: 3, velocity: 1) // zoom in
         // Zoom out
@@ -78,8 +77,9 @@ class Image_FeedUITests: XCTestCase {
     
     func testProfile() throws {
         // тестируем сценарий профиля
-        sleep(3)
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        let tabBarButton = app.tabBars.buttons.element(boundBy: 1)
+        XCTAssertTrue(tabBarButton.waitForExistence(timeout: 3))
+        tabBarButton.tap()
         
         XCTAssertTrue(app.staticTexts["profileName"].exists)
         XCTAssertTrue(app.staticTexts["profileUsername"].exists)
