@@ -44,15 +44,7 @@ final class ImagesListService{
             switch result {
             case .success(let photoResponse):
                 for response in photoResponse {
-                    let photo = Photo(
-                        id: response.id,
-                        size: CGSize(width: response.width, height: response.height),
-                        createdAt: response.createdAt,
-                        welcomeDescription: response.description,
-                        thumbImageURL: response.imageURL.thumb,
-                        largeImageURL: response.imageURL.full,
-                        isLiked: response.isLiked
-                    )
+                    let photo = Photo(photoResult: response)
                     
                     // Фильтр от дублирующихся фотографий, которые присылает unsplash.
                     let existingIds = Set(self.photos.map { $0.id })

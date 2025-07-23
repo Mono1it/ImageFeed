@@ -54,5 +54,9 @@ final class ImagesListCell: UITableViewCell {
         // Установка лайка
         let image = isLike ? UIImage(resource: .active) : UIImage(resource: .noActive)
         likeButtonView.setImage(image, for: .normal)
+        
+        // ✅ Accessibility для UI-тестов
+            likeButtonView.accessibilityIdentifier = "like button"
+            likeButtonView.accessibilityValue = isLike ? "liked" : "not liked"
     }
 }
